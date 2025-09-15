@@ -1,5 +1,6 @@
 import RegisterCompleteForm from "@/components/auth/RegisterCompleteForm";
 import { Metadata } from "next";
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: "SignUp Page | Sign In - Dashboard Template",
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function Complete() {
-  return <RegisterCompleteForm />;
+   return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <RegisterCompleteForm />
+      </Suspense>
+    );
 }

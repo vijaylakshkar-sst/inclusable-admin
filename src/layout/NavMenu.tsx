@@ -1,137 +1,161 @@
-// components/NavMenu.tsx
-"use client";
-import React, { useState, useEffect, useCallback } from "react";
+'use client';
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalenderIcon, ChevronDownIcon, GridIcon, ListIcon, PageIcon, TableIcon } from "../icons";
+import { ChevronDownIcon, GridIcon, ListIcon } from "../icons";
 
-type SubItem = { name: string; path: string; pro?: boolean; new?: boolean };
 type NavItem = {
   name: string;
-  icon?: React.ReactNode;
   path?: string;
-  subItems?: SubItem[];
+  icon?: React.ReactNode;
+  pro?: boolean;
+  new?: boolean;
+  subItems?: NavItem[];
 };
 
+// Menu items
 const navItems: NavItem[] = [
   {
     name: "Dashboard",
-    icon: <GridIcon />,
     path: "/dashboard",
-    // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    icon: <GridIcon />,
   },
- {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
-
   {
-    name: "Forms",
+    name: "Legal Content",
     icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
     subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
+      {
+        name: "Terms & Conditions",
+        // icon: <ListIcon />,
+        path: "/term-conditions",
+        // subItems: [
+        //   { name: "List", path: "/term-conditions" },
+        //   { name: "Create", path: "/term-conditions/create" },
+        // ],
+      },
+      {
+        name: "Privacy Policy",
+        //  icon: <ListIcon />,
+        path: "/privacy-policy",
+        // subItems: [
+        //   { name: "List", path: "/privacy-policy" },
+        //   { name: "Create", path: "/privacy-policy/create" },
+        // ],
+      },
     ],
   },
-  // Add more nav items here
 ];
 
 const NavMenu: React.FC = () => {
   const pathname = usePathname();
-  const isActive = useCallback((path: string) => pathname === path, [pathname]);
-
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const handleToggle = (index: number) => {
-    setOpenIndex((prev) => (prev === index ? null : index));
-  };
-
-  useEffect(() => {
-    navItems.forEach((item, index) => {
-      if (item.subItems?.some((sub) => isActive(sub.path))) {
-        setOpenIndex(index);
-      }
-    });
-  }, [pathname, isActive]);
+  const isActive = useCallback((path?: string) => pathname === path, [pathname]);
 
   return (
-    <div className="flex gap-6 items-center">
-      {navItems.map((item, index) => {
-        const isOpen = openIndex === index;
+    <nav className="flex gap-6 items-center relative">
+      {navItems.map((item, index) => (
+        <RecursiveMenuItem key={index} item={item} isActive={isActive} depth={0} />
+      ))}
+    </nav>
+  );
+};
 
-        return item.subItems ? (
-          <div key={item.name} className="relative group">
-            <button
-              onClick={() => handleToggle(index)}
-              className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                isOpen ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-300"
-              }`}
-            >
-              {item.icon}
-              {item.name}
-              <ChevronDownIcon className="w-4 h-4" />
-            </button>
+export default NavMenu;
 
-            <div
-              className={`absolute left-0 top-full mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${
-                isOpen ? "block" : "hidden"
-              }`}
-            >
-              {item.subItems.map((sub) => (
-                <Link
-                  key={sub.name}
-                  href={sub.path}
-                  className={`flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    isActive(sub.path)
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-gray-700 dark:text-gray-200"
-                  }`}
-                >
-                  {sub.name}
-                  <span className="ml-auto flex gap-1">
-                    {sub.new && (
-                      <span className="text-xs text-white bg-green-500 px-1.5 py-0.5 rounded">
-                        NEW
-                      </span>
-                    )}
-                    {sub.pro && (
-                      <span className="text-xs text-white bg-purple-500 px-1.5 py-0.5 rounded">
-                        PRO
-                      </span>
-                    )}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <Link
-            key={item.name}
-            href={item.path || "#"}
+const RecursiveMenuItem: React.FC<{
+  item: NavItem;
+  isActive: (path?: string) => boolean;
+  depth: number; // track depth
+}> = ({ item, isActive, depth }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const toggle = () => setOpen((prev) => !prev);
+  const hasChildren = item.subItems && item.subItems.length > 0;
+
+  // Auto-open if any subitem is active
+  useEffect(() => {
+    if (item.subItems?.some((sub) => isActive(sub.path))) {
+      setOpen(true);
+    }
+  }, [item.subItems, isActive]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Determine submenu position: first level => bottom, others => right
+  const submenuPosition =
+    depth === 0
+      ? "absolute left-0 top-full mt-1" // below parent
+      : "absolute top-0 left-full ml-1"; // right of parent
+
+  return (
+    <div ref={ref} className="relative group">
+      {hasChildren ? (
+        <>
+          <button
+            onClick={toggle}
             className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 ${
-              isActive(item.path || "")
+              open
                 ? "text-blue-600 dark:text-blue-400"
                 : "text-gray-700 dark:text-gray-300"
             }`}
           >
             {item.icon}
             {item.name}
-          </Link>
-        );
-      })}
+            <ChevronDownIcon className="w-4 h-4" />
+          </button>
+
+          {/* Nested submenu */}
+          <div
+            className={`w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${
+              open ? "block" : "hidden"
+            } ${submenuPosition}`}
+          >
+            {item.subItems?.map((sub, i) => (
+              <RecursiveMenuItem
+                key={i}
+                item={sub}
+                isActive={isActive}
+                depth={depth + 1}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Link
+          href={item.path || "#"}
+          className={`flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+            isActive(item.path)
+              ? "text-blue-600 dark:text-blue-400"
+              : "text-gray-700 dark:text-gray-200"
+          }`}
+        >
+          <span className="flex items-center gap-2">
+            {item.icon}
+            {item.name}
+          </span>
+          <span className="ml-auto flex gap-1">
+            {item.new && (
+              <span className="text-xs text-white bg-green-500 px-1.5 py-0.5 rounded">
+                NEW
+              </span>
+            )}
+            {item.pro && (
+              <span className="text-xs text-white bg-purple-500 px-1.5 py-0.5 rounded">
+                PRO
+              </span>
+            )}
+          </span>
+        </Link>
+      )}
     </div>
   );
 };
-
-export default NavMenu;

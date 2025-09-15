@@ -1,21 +1,20 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import Button from '@/components/ui/button/Button'
+import { useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Button from '@/components/ui/button/Button';
 
 export default function PasswordCompleteForm() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const success = searchParams.get('success') === '1'
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const success = searchParams.get('success') === '1';
 
   useEffect(() => {
     if (success) {
-      setTimeout(() => {
-        localStorage.removeItem('reset_token')
-      }, 3000)
+      setTimeout(() => localStorage.removeItem('reset_token'), 3000);
     }
-  }, [success, router])
+  }, [success]);
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5" />
@@ -48,5 +47,5 @@ export default function PasswordCompleteForm() {
         )}
       </div>
     </div>
-  )
+  );
 }

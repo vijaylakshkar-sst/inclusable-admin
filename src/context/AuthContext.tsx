@@ -21,9 +21,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .then((data) => {
         
         if (data.status && data.data) {
-          // 🚫 Block Admin login
-          
-           console.log(data,'success');
+          // 🚫 Block Admin login         
+           
           if (data.data.role === "Admin") {
             setUser(data.data);
            
