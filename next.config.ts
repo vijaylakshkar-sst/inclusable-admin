@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  reactStrictMode: false,
   
   /* config options here */
   webpack(config) {

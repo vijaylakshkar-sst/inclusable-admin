@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon, GridIcon, ListIcon } from "../icons";
+import { ChevronDownIcon, GridIcon, ListIcon, UserCircleIcon } from "../icons";
 
 type NavItem = {
   name: string;
@@ -41,6 +41,21 @@ const navItems: NavItem[] = [
         //   { name: "List", path: "/privacy-policy" },
         //   { name: "Create", path: "/privacy-policy/create" },
         // ],
+      },
+    ],
+  },
+  {
+    name: "Users",
+    icon: <UserCircleIcon />,
+    subItems: [
+      {
+        name: "NDIS Users",
+        path: "/ndis-users",       
+      },
+      {
+        name: "Business Users",
+        path: "/business-users",
+       
       },
     ],
   },

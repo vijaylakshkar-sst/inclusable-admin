@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React,{useEffect, useState} from "react";
 // import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import ChartTab from "../common/ChartTab";
 import dynamic from "next/dynamic";
+import {MonthlyBookingChartData, getMonthlyBookingChartData } from "@/api/dashboard/monthlyBookingChart";
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -11,13 +12,34 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 });
 
 export default function StatisticsChart() {
+
+  const [chartData, setChartData] = useState<MonthlyBookingChartData>({
+    labels: [],
+    data: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getMonthlyBookingChartData();       
+        if (res.status) {
+          setChartData(res.data);
+        }
+      } catch (err) {
+        console.error("Error fetching monthly booking data:", err);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   const options: ApexOptions = {
     legend: {
       show: false, // Hide legend
       position: "top",
       horizontalAlign: "left",
     },
-    colors: ["#465FFF", "#9CB9FF"], // Define line colors
+    colors: ["#465FFF"], // Define line colors
     chart: {
       fontFamily: "Outfit, sans-serif",
       height: 310,
@@ -69,20 +91,7 @@ export default function StatisticsChart() {
     },
     xaxis: {
       type: "category", // Category-based x-axis
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: chartData.labels, // Use chartData.labels for x-axis categories
       axisBorder: {
         show: false, // Hide x-axis border
       },
@@ -109,14 +118,10 @@ export default function StatisticsChart() {
     },
   };
 
-  const series = [
-    {
-      name: "Sales",
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
-    },
+  const series = [    
     {
       name: "Revenue",
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
+      data: chartData.data,
     },
   ];
   return (
@@ -130,9 +135,7 @@ export default function StatisticsChart() {
             Target you’ve set for each month
           </p>
         </div>
-        <div className="flex items-start w-full gap-3 sm:justify-end">
-          <ChartTab />
-        </div>
+        
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">
