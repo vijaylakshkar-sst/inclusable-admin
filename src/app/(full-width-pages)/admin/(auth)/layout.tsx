@@ -24,7 +24,7 @@ export default function AuthLayout({
               <Image
                 width={231}
                 height={48}
-                src="/images/logo/logo.svg"
+                src="/images/logo/inclusable-logo.svg"
                 alt="Logo"
               />
             </Link>

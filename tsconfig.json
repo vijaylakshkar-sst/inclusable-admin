@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(full-width-pages)/(auth)/(reset-password)/password-request/page.tss"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(full-width-pages)/admin/(auth)/(reset-password)/password-request/page.tss"],
   "exclude": ["node_modules"]
 }

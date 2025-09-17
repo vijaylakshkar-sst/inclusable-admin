@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon, GridIcon, ListIcon, UserCircleIcon } from "../icons";
+import { ChevronDownIcon, GridIcon, ListIcon, UserCircleIcon, EnvelopeIcon } from "../icons";
 
 type NavItem = {
   name: string;
@@ -17,31 +17,17 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     name: "Dashboard",
-    path: "/dashboard",
+    path: "/admin/dashboard",
     icon: <GridIcon />,
-  },
+  },  
   {
-    name: "Legal Content",
+    name: "Masters",
     icon: <ListIcon />,
     subItems: [
       {
-        name: "Terms & Conditions",
-        // icon: <ListIcon />,
-        path: "/term-conditions",
-        // subItems: [
-        //   { name: "List", path: "/term-conditions" },
-        //   { name: "Create", path: "/term-conditions/create" },
-        // ],
-      },
-      {
-        name: "Privacy Policy",
-        //  icon: <ListIcon />,
-        path: "/privacy-policy",
-        // subItems: [
-        //   { name: "List", path: "/privacy-policy" },
-        //   { name: "Create", path: "/privacy-policy/create" },
-        // ],
-      },
+        name: "Cab Types",
+        path: "/admin/masters/cab-types",       
+      },      
     ],
   },
   {
@@ -50,15 +36,40 @@ const navItems: NavItem[] = [
     subItems: [
       {
         name: "NDIS Users",
-        path: "/ndis-users",       
+        path: "/admin/ndis-users",       
       },
       {
         name: "Business Users",
-        path: "/business-users",
+        path: "/admin/business-users",
        
       },
     ],
   },
+  {
+    name: "Legal Content",
+    icon: <EnvelopeIcon />,
+    subItems: [
+      {
+        name: "Terms & Conditions",
+        // icon: <ListIcon />,
+        path: "/admin/term-conditions",
+        // subItems: [
+        //   { name: "List", path: "/term-conditions" },
+        //   { name: "Create", path: "/term-conditions/create" },
+        // ],
+      },
+      {
+        name: "Privacy Policy",
+        //  icon: <ListIcon />,
+        path: "/admin/privacy-policy",
+        // subItems: [
+        //   { name: "List", path: "/privacy-policy" },
+        //   { name: "Create", path: "/privacy-policy/create" },
+        // ],
+      },
+    ],
+  },
+  
 ];
 
 const NavMenu: React.FC = () => {

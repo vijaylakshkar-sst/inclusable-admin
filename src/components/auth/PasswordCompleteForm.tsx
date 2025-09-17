@@ -28,7 +28,7 @@ export default function PasswordCompleteForm() {
             <p className="text-center text-gray-600 mb-6">
               You can now sign in with your credentials.
             </p>
-            <Button onClick={() => router.push('/signin')} className="w-full max-w-sm">
+            <Button onClick={() => router.push('/admin/signin')} className="w-full max-w-sm">
               Go to Sign In
             </Button>
           </>
@@ -40,7 +40,7 @@ export default function PasswordCompleteForm() {
             <p className="text-center text-gray-600 mb-6">
               Please try registering again.
             </p>
-            <Button onClick={() => router.push('/signin')} className="w-full max-w-sm">
+            <Button onClick={() => router.push('/admin/signin')} className="w-full max-w-sm">
               Try Again
             </Button>
           </>

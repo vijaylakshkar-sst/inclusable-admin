@@ -53,7 +53,7 @@ export default function TermsListPage() {
     try {
       const res = await deleteTermApi(term.id!);
       if (res.status) {
-        toast.success(`Term "${term.title}" deleted successfully.`);
+        // toast.success(`Term "${term.title}" deleted successfully.`);
         setTerms((prev) => prev.filter((t) => t.id !== term.id));
       } else {
         toast.error('Failed to delete: ' + res.data);
@@ -77,8 +77,7 @@ export default function TermsListPage() {
     try {
       if (editingTerm) {
         const res = await updateTermApi(editingTerm.id!, { title, content });
-        if (res.status) {
-          toast.success('Term updated successfully.');
+        if (res.status) {        
           setTerms((prev) =>
             prev.map((t) =>
               t.id === editingTerm.id ? { ...t, title, content } : t
@@ -88,7 +87,6 @@ export default function TermsListPage() {
       } else {
         const res = await createTermApi({ title, content });
         if (res.status) {
-          toast.success('Term created successfully.');
           setTerms((prev) => [...prev, res.data]);
         }
       }

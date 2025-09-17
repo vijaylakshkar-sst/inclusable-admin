@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             alert("You are not authorized to access this panel.");
             localStorage.removeItem("token");
             setUser(null);
-            router.push("/login");
+            router.push("/admin/signin");
           }
         } else {
           setUser(null);
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (res.ok && data.token) {
       localStorage.setItem("token", data.token);
       setUser(data.user);
-      router.push("/dashboard");
+      router.push("/admin/dashboard");
     } else {
       throw new Error(data.message || "Login failed");
     }
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    router.push("/login");
+    router.push("/admin/signin");
   };
 
   return (

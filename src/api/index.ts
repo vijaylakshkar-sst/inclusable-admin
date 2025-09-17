@@ -48,6 +48,7 @@ interface RequestOptions {
   data?: any;
   params?: any;
   successMessage?: string;
+  headers?: Record<string, string>; // ✅ NEW
 }
 
 export const requestApi = async <T = any>({
@@ -56,6 +57,7 @@ export const requestApi = async <T = any>({
   data,
   params,
   successMessage,
+  headers,
 }: RequestOptions): Promise<T> => {
   try {
     const response = await api.request<T>({
@@ -63,13 +65,14 @@ export const requestApi = async <T = any>({
       method,
       data,
       params,
+      headers, // ✅ Pass custom headers if provided (e.g. multipart/form-data)
     });
 
     if (successMessage) toast.success(successMessage);
 
     return response.data;
   } catch (error) {
-    // Error is already handled globally in interceptor
+    // Errors handled globally by interceptors
     throw error;
   }
 };

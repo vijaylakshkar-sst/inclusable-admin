@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
     try {
       const res = await deletePrivacyPolicyApi(privacy.id!);
       if (res.status) {
-        toast.success(`Privacy Policy "${privacy.title}" deleted successfully.`);
+        // toast.success(`Privacy Policy "${privacy.title}" deleted successfully.`);
         setPrivacyPolicies((prev) => prev.filter((t) => t.id !== privacy.id));
       } else {
         toast.error('Failed to delete: ' + res.data);
@@ -71,8 +71,7 @@ export default function PrivacyPolicyPage() {
     try {
       if (editPrivacyPolicy) {
         const res = await updatePrivacyPolicyApi(editPrivacyPolicy.id!, { title, content });
-        if (res.status) {
-          toast.success('Privacy Policy updated successfully.');
+        if (res.status) {          
           setPrivacyPolicies((prev) =>
             prev.map((t) =>
               t.id === editPrivacyPolicy.id ? { ...t, title, content } : t
@@ -81,8 +80,7 @@ export default function PrivacyPolicyPage() {
         }
       } else {
         const res = await createPrivacyPolicyApi({ title, content });
-        if (res.status) {
-          toast.success('Privacy Policy created successfully.');
+        if (res.status) {          
           setPrivacyPolicies((prev) => [...prev, res.data]);
         }
       }

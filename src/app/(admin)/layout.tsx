@@ -19,7 +19,7 @@ export default function AdminLayout({
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/signin");
+      router.push("/admin/signin");
     }
   }, [user, loading, router]);
 
