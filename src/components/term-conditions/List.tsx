@@ -13,6 +13,7 @@ import {
   updateTermApi
 } from '@/api/legalContent/term_condition_api';
 import Tiptap from '../Tiptap';
+import Button from '../ui/button/Button';
 
 export default function TermsListPage() {
   const [terms, setTerms] = useState<TermCondition[]>([]);
@@ -175,14 +176,13 @@ export default function TermsListPage() {
                 onUpdate={(html) => setContent(html)}
                 />
           </div>
-          <button
+          <Button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             {editingTerm ? 'Update Term' : 'Add Term'}
-          </button>
+          </Button>
           {editingTerm && (
-            <button
+            <Button
               type="button"
               className="bg-gray-400 text-white px-4 py-2 rounded"
               onClick={() => {
@@ -192,7 +192,7 @@ export default function TermsListPage() {
               }}
             >
               Cancel
-            </button>
+            </Button>
           )}
         </form>
       </div>

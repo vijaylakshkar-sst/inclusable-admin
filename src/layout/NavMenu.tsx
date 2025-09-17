@@ -130,7 +130,7 @@ const RecursiveMenuItem: React.FC<{
             onClick={toggle}
             className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 ${
               open
-                ? "text-blue-600 dark:text-blue-400"
+                ? "text-[#4c6a87] dark:text-[#4c6a87]"
                 : "text-gray-700 dark:text-gray-300"
             }`}
           >
@@ -158,9 +158,9 @@ const RecursiveMenuItem: React.FC<{
       ) : (
         <Link
           href={item.path || "#"}
-          className={`flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+          className={`flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700  ${
             isActive(item.path)
-              ? "text-blue-600 dark:text-blue-400"
+              ? "text-[#4c6a87] dark:text-[#4c6a87]"
               : "text-gray-700 dark:text-gray-200"
           }`}
         >

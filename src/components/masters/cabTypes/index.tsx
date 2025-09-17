@@ -12,6 +12,7 @@ import {
   updateCabTypeApi,
   deleteCabTypeApi,
 } from '@/api/masters/cabTypesAPI';
+import Button from '@/components/ui/button/Button';
 
 export default function CabTypePage() {
   const [cabTypes, setCabTypes] = useState<CabType[]>([]);
@@ -176,9 +177,9 @@ export default function CabTypePage() {
           <input name="luggage_capacity" placeholder="Luggage Capacity" value={form.luggage_capacity} onChange={handleChange} className="border px-3 py-2 rounded" />
           <input name="thumbnail" type="file" onChange={handleFileChange} className="border px-3 py-2 rounded" />
 
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+          <Button type="submit">
             {editItem ? 'Update' : 'Add'}
-          </button>
+          </Button>
           {editItem && (
             <button type="button" onClick={resetForm} className="bg-gray-400 text-white px-4 py-2 rounded">
               Cancel

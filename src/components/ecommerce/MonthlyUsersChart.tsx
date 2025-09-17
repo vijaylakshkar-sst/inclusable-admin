@@ -31,7 +31,7 @@ export default function MonthlyUsersChart() {
   }, []);
 
   const options: ApexOptions = {
-    colors: ["#465fff", "#16f1f9ff"], // Two colors for two bars
+    colors: ["#4c6a87", "#c0cbd1ff"], // Two colors for two bars
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "bar",

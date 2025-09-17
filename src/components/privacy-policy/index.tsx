@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { PrivacyPolicy, getPrivacyPolicysApi, updatePrivacyPolicyApi, deletePrivacyPolicyApi, createPrivacyPolicyApi } from '@/api/legalContent/privacy_policy_api';
 import Tiptap from '../Tiptap';
+import Button from '../ui/button/Button';
 
 export default function PrivacyPolicyPage() {
   const [privacyPolicies, setPrivacyPolicies] = useState<PrivacyPolicy[]>([]);
@@ -169,14 +170,13 @@ export default function PrivacyPolicyPage() {
                 onUpdate={(html) => setContent(html)}
                 />
           </div>
-          <button
+          <Button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             {editPrivacyPolicy ? 'Update Term' : 'Add Term'}
-          </button>
+          </Button>
           {editPrivacyPolicy && (
-            <button
+            <Button
               type="button"
               className="bg-gray-400 text-white px-4 py-2 rounded"
               onClick={() => {
@@ -186,7 +186,7 @@ export default function PrivacyPolicyPage() {
               }}
             >
               Cancel
-            </button>
+            </Button>
           )}
         </form>
       </div>
