@@ -55,9 +55,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     const data = await res.json();
+    console.log(data);
+    
     if (res.ok && data.token) {
       localStorage.setItem("token", data.token);
-      setUser(data.user);
+      setUser(data.data.user);
       router.push("/admin/dashboard");
     } else {
       throw new Error(data.message || "Login failed");

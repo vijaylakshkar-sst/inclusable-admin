@@ -1,13 +1,19 @@
 // src/api/auth/sendOtp.ts
-import { api } from '../index'
+import { requestApi } from '../index';
 
 interface SendOtpPayload {
-  email: string
-  mobile?: string
-  type: 'register' | 'forgot'
+  email: string;
+  mobile?: string;
+  type: 'register' | 'forgot';
 }
 
 export const sendOtpApi = async (data: SendOtpPayload) => {
-  const res = await api.post('/send-otp', data)
-  return res.data
-}
+  const response = await requestApi({
+    url: '/send-otp',
+    method: 'POST',
+    data,
+    successMessage: 'OTP sent successfully!', // Optional: Customize as needed
+  });
+
+  return response;
+};
