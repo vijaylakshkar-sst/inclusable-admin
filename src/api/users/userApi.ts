@@ -24,6 +24,7 @@ export interface BusinessMember {
   date_of_birth: string | null;
   gender: string | null;
   business_name: string;
+  strip_customer_id: string;
   business_category: string;
   business_email: string;
   business_phone_number: string;
@@ -36,6 +37,14 @@ export interface BusinessMember {
   business_overview: string;
 }
 
+export interface StripeBankLinkResponse {
+  success: boolean;
+  message: string;
+  data: {
+    session_secret: string;
+    session_id: string;
+  };
+}
 
 // 🧑‍🦽 NDIS Members
 export const getNdisMembers = async (): Promise<{ status: boolean; data: NdisMember[] }> => {
@@ -87,3 +96,13 @@ export const deleteEvent = async (id: number) => {
   });
 };
 
+export const generateBankLinkApi = async (
+  data: { stripe_customer_id: string }
+): Promise<StripeBankLinkResponse> => {
+  return await requestApi({
+    url: '/stripe/create-bank-link',
+    method: 'POST',
+    data,
+    successMessage: 'Stripe bank link generated successfully!',
+  });
+};
