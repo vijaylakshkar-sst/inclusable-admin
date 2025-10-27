@@ -46,7 +46,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    name: "Legal Content",
+    name: "App Content",
     icon: <EnvelopeIcon />,
     subItems: [
       {
@@ -60,12 +60,11 @@ const navItems: NavItem[] = [
       },
       {
         name: "Privacy Policy",
-        //  icon: <ListIcon />,
         path: "/admin/privacy-policy",
-        // subItems: [
-        //   { name: "List", path: "/privacy-policy" },
-        //   { name: "Create", path: "/privacy-policy/create" },
-        // ],
+      },
+       {
+        name: "Support Tickets",
+        path: "/admin/support-tickets",       
       },
     ],
   },

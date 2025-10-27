@@ -144,13 +144,15 @@ const handleDelete = async (row: BusinessMember) => {
   const uniqueCategories = [...new Set(businessMembers.map((m) => m.business_category).filter(Boolean))];
 
   const filteredData = businessMembers.filter((member) =>
-    (member.full_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.business_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.business_email?.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.abn_number?.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.business_category?.toLowerCase().includes(searchText.toLowerCase())) &&
-    (categoryFilter ? member.business_category === categoryFilter : true)
-  );
+  (
+    member.full_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+    member.business_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+    member.business_email?.toLowerCase().includes(searchText.toLowerCase()) ||
+    member.abn_number?.toLowerCase().includes(searchText.toLowerCase()) ||
+    String(member.business_category || '').toLowerCase().includes(searchText.toLowerCase())
+  ) &&
+  (categoryFilter ? member.business_category === categoryFilter : true)
+);
 
   const handleDeleteEvent = async (event: any) => {
   Swal.fire({
