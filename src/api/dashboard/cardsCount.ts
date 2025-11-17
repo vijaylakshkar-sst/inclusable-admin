@@ -3,6 +3,7 @@ import { requestApi } from '../index';
 export interface DashboardCardsCount {
   "NDIS Member": number;
   "Company": number;
+  "Cab Owner": number;
 }
 
 export interface ApiResponse<T> {

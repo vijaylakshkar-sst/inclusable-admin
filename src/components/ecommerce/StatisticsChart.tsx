@@ -1,141 +1,125 @@
 "use client";
-import React,{useEffect, useState} from "react";
-// import Chart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
-import ChartTab from "../common/ChartTab";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import {MonthlyBookingChartData, getMonthlyBookingChartData } from "@/api/dashboard/monthlyBookingChart";
+import { ApexOptions } from "apexcharts";
+import {
+  MonthlyBookingChartData,
+  getMonthlyBookingChartData,
+} from "@/api/dashboard/monthlyBookingChart";
 
-// Dynamically import the ReactApexChart component
-const ReactApexChart = dynamic(() => import("react-apexcharts"), {
-  ssr: false,
-});
+// ✅ Dynamically import ApexCharts
+const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function StatisticsChart() {
-
   const [chartData, setChartData] = useState<MonthlyBookingChartData>({
     labels: [],
-    data: [],
+    eventData: [],
+    cabData: [],
+    totalData: [],
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getMonthlyBookingChartData();       
+        const res = await getMonthlyBookingChartData();
+        console.log(res);
+        
         if (res.status) {
           setChartData(res.data);
         }
       } catch (err) {
-        console.error("Error fetching monthly booking data:", err);
+        console.error("Error fetching monthly revenue:", err);
       }
     };
     fetchData();
   }, []);
 
-
+  // ✅ Chart Configuration
   const options: ApexOptions = {
-    legend: {
-      show: false, // Hide legend
-      position: "top",
-      horizontalAlign: "left",
-    },
-    colors: ["#4c6a87"], // Define line colors
     chart: {
-      fontFamily: "Outfit, sans-serif",
+      type: "area",
       height: 310,
-      type: "line", // Set the chart type to 'line'
-      toolbar: {
-        show: false, // Hide chart toolbar
+      toolbar: { show: false },
+      fontFamily: "Outfit, sans-serif",
+    },
+    colors: ["#4F46E5", "#22C55E"], // Purple = Event, Green = Cab
+    stroke: {
+      curve: "smooth",
+      width: 2,
+    },
+    legend: {
+      show: true,
+      position: "top",
+      horizontalAlign: "center",
+      fontSize: "13px",
+      labels: { colors: "#6B7280" },
+      markers: {
+        size: 8,
+        strokeWidth: 0,
+        fillColors: ["#4F46E5", "#22C55E"],
       },
     },
-    stroke: {
-      curve: "straight", // Define the line style (straight, smooth, or step)
-      width: [2, 2], // Line width for each dataset
-    },
-
     fill: {
       type: "gradient",
       gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
-      },
-    },
-    markers: {
-      size: 0, // Size of the marker points
-      strokeColors: "#fff", // Marker border color
-      strokeWidth: 2,
-      hover: {
-        size: 6, // Marker size on hover
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 100],
       },
     },
     grid: {
-      xaxis: {
-        lines: {
-          show: false, // Hide grid lines on x-axis
-        },
-      },
-      yaxis: {
-        lines: {
-          show: true, // Show grid lines on y-axis
-        },
-      },
+      borderColor: "#f1f1f1",
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } },
     },
-    dataLabels: {
-      enabled: false, // Disable data labels
-    },
-    tooltip: {
-      enabled: true, // Enable tooltip
-      x: {
-        format: "dd MMM yyyy", // Format for x-axis tooltip
-      },
-    },
+    dataLabels: { enabled: false },
     xaxis: {
-      type: "category", // Category-based x-axis
-      categories: chartData.labels, // Use chartData.labels for x-axis categories
-      axisBorder: {
-        show: false, // Hide x-axis border
+      categories: chartData.labels,
+      labels: {
+        style: { colors: "#6B7280", fontSize: "12px" },
       },
-      axisTicks: {
-        show: false, // Hide x-axis ticks
-      },
-      tooltip: {
-        enabled: false, // Disable tooltip for x-axis points
-      },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
     },
     yaxis: {
       labels: {
-        style: {
-          fontSize: "12px", // Adjust font size for y-axis labels
-          colors: ["#6B7280"], // Color of the labels
-        },
+        style: { colors: "#6B7280", fontSize: "12px" },
       },
-      title: {
-        text: "", // Remove y-axis title
-        style: {
-          fontSize: "0px",
-        },
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      theme: "light",
+      y: {
+        formatter: (val) => `AUD ${val.toFixed(2)}`,
       },
     },
   };
 
-  const series = [    
+  // ✅ Dual-Line Data
+  const series = [
     {
-      name: "AUD",
-      data: chartData.data,
+      name: "Event Revenue (AUD)",
+      data: chartData.eventData,
+    },
+    {
+      name: "Cab Revenue (AUD)",
+      data: chartData.cabData,
     },
   ];
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
-        <div className="w-full">
+        <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Monthly Booking Amount
+            Monthly Booking Revenue
           </h3>
           <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Target you’ve set for each month
+            Comparison between Cab & Event bookings
           </p>
         </div>
-        
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">

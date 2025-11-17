@@ -37,14 +37,57 @@ export interface BusinessMember {
   business_overview: string;
 }
 
-export interface StripeBankLinkResponse {
-  success: boolean;
-  message: string;
-  data: {
-    session_secret: string;
-    session_id: string;
+// ✅ Cab Owner type
+export interface CabOwner {
+  id: number;
+  user_id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: string;
+  vehicle_number?: string | null;
+  vehicle_make?: string | null;
+  vehicle_model_name?: string | null;
+  vehicle_make_name?: string | null;
+  vehicle_model?: string | null;
+  cab_type?: string | null;
+  cab_type_name?: string | null;
+  is_available?: boolean;
+  status?: string;
+  created_at?: string;
+}
+
+
+// ✅ Cab Owner Details type
+export interface CabOwnerDetails {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: string;
+  is_verified: boolean;
+  vehicle_number: string;
+  vehicle_make: string | null;
+  vehicle_model: string | null;
+  cab_type: string | null;
+  manufacturing_year: number | null;
+  license_number: string | null;
+  status: string;
+  is_available: boolean;
+  current_location: {
+    lat: number | null;
+    lng: number | null;
+  };
+  images: {
+    license_photo_front: string | null;
+    license_photo_back: string | null;
+    rc_copy: string | null;
+    insurance_copy: string | null;
+    police_check_certificate: string | null;
+    wwvp_card: string | null;
   };
 }
+
 
 // 🧑‍🦽 NDIS Members
 export const getNdisMembers = async (): Promise<{ status: boolean; data: NdisMember[] }> => {
@@ -61,6 +104,35 @@ export const getBusinessMembers = async (): Promise<{ status: boolean; data: Bus
     url: '/admin/users/business-members',
     method: 'GET',
     successMessage: 'Business Members fetched successfully!',
+  });
+};
+
+// 🧑‍✈️ Cab Owners
+export const getCabOwners = async (): Promise<{ status: boolean; data: CabOwner[] }> => {
+  return await requestApi({
+    url: '/admin/users/cab-owners',
+    method: 'GET',
+    successMessage: 'Cab Owners fetched successfully!',
+  });
+};
+
+// 🧩 Cab Owner Details (with full image URLs)
+export const getCabOwnerDetails = async (
+  id: number
+): Promise<{ status: boolean; data: CabOwnerDetails }> => {
+  return await requestApi({
+    url: `/admin/users/cab-owner/${id}`,
+    method: 'GET',
+    successMessage: 'Cab Owner details fetched successfully!',
+  });
+};
+
+// 🗑️ Delete Cab Owner
+export const deleteCabOwner = async (id: number) => {
+  return await requestApi({
+    url: `/admin/users/cab-owner/${id}`,
+    method: 'DELETE',
+    successMessage: 'Cab Owner deleted successfully!',
   });
 };
 
@@ -93,16 +165,5 @@ export const deleteEvent = async (id: number) => {
     url: '/admin/users/event/' + id,
     method: 'DELETE',
     successMessage: 'Event Deleted successfully!',
-  });
-};
-
-export const generateBankLinkApi = async (
-  data: { stripe_customer_id: string }
-): Promise<StripeBankLinkResponse> => {
-  return await requestApi({
-    url: '/stripe/create-bank-link',
-    method: 'POST',
-    data,
-    successMessage: 'Stripe bank link generated successfully!',
   });
 };

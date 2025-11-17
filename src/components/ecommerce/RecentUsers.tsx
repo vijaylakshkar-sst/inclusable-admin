@@ -90,7 +90,7 @@ export default function RecentUsers() {
                 <TableCell className="py-3 text-theme-sm">
                   <Badge
                     size="sm"
-                    color={user.role === "NDIS Member" ? "info" : "success"}
+                    color={user.role === "NDIS Member" ? "info" : user.role === "Company" ? "warning" : "success"}
                   >
                     {user.role}
                   </Badge>

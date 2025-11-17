@@ -27,6 +27,14 @@ const navItems: NavItem[] = [
       {
         name: "Cab Types",
         path: "/admin/masters/cab-types",       
+      }, 
+      {
+        name: "Vehicle Makes",
+        path: "/admin/masters/vehicle-makes",       
+      }, 
+      {
+        name: "Vehicle Models",
+        path: "/admin/masters/vehicle-models",       
       },      
     ],
   },
@@ -43,6 +51,11 @@ const navItems: NavItem[] = [
         path: "/admin/business-users",
        
       },
+      {
+        name: "Cab Owners",
+        path: "/admin/cab-owners",       
+      },
+
     ],
   },
   {

@@ -5,6 +5,7 @@ export interface MonthlyRoleChartData {
   labels: string[];
   ndis: number[];
   business: number[];
+  cabOwners: number[];
 }
 
 export const getMonthlyRoleChartData = async (): Promise<{ status: boolean; data: MonthlyRoleChartData }> => {

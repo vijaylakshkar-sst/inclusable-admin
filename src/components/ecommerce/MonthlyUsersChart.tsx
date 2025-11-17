@@ -1,22 +1,19 @@
 "use client";
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
-import { MoreDotIcon } from "@/icons";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { useState,useEffect } from "react";
-import { Dropdown } from "../ui/dropdown/Dropdown";
+import { useState, useEffect } from "react";
 import { getMonthlyRoleChartData } from "@/api/dashboard/monthlyRoleChart";
 
-// Dynamically import the ReactApexChart component
+// ✅ Dynamically import ReactApexChart
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
 export default function MonthlyUsersChart() {
-
   const [labels, setLabels] = useState<string[]>([]);
   const [ndisData, setNdisData] = useState<number[]>([]);
   const [businessData, setBusinessData] = useState<number[]>([]);
+  const [cabOwners, setCabOwners] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchChart = async () => {
@@ -25,76 +22,94 @@ export default function MonthlyUsersChart() {
         setLabels(res.data.labels);
         setNdisData(res.data.ndis);
         setBusinessData(res.data.business);
+        setCabOwners(res.data.cabOwners);
       }
     };
     fetchChart();
   }, []);
 
   const options: ApexOptions = {
-    colors: ["#4c6a87", "#c0cbd1ff"], // Two colors for two bars
     chart: {
+      type: "line",
+      height: 280,
+      toolbar: { show: false },
       fontFamily: "Outfit, sans-serif",
-      type: "bar",
-      height: 180,
-      toolbar: {
-        show: false,
+      dropShadow: {
+        enabled: true,
+        top: 3,
+        left: 3,
+        blur: 5,
+        opacity: 0.1,
       },
     },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "50%", // less overlap
-        borderRadius: 5,
-        borderRadiusApplication: "end",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
+    colors: ["#3B82F6", "#10B981", "#8B5CF6"], // blue, green, purple
     stroke: {
-      show: true,
-      width: 4,
-      colors: ["transparent"],
+      curve: "smooth", // Smooth curved lines
+      width: 3,
+      dashArray: [0, 6, 4], // 👈 makes some lines dotted/dashed
     },
-    xaxis: {
-      categories: labels,
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    legend: {
-      show: true,
-      position: "top",
-      horizontalAlign: "left",
-      fontFamily: "Outfit",
-    },
-    yaxis: {
-      title: {
-        text: undefined,
-      },
+    markers: {
+      size: 5,
+      strokeWidth: 2,
+      strokeColors: "#fff",
+      hover: { size: 7 },
     },
     grid: {
-      yaxis: {
-        lines: {
-          show: true,
+      borderColor: "#e5e7eb",
+      strokeDashArray: 4,
+      padding: { left: 20, right: 20 },
+    },
+    dataLabels: { enabled: false },
+    xaxis: {
+      categories: labels,
+      labels: {
+        style: {
+          colors: "#6B7280",
+          fontSize: "12px",
+        },
+      },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: "#6B7280",
+          fontSize: "12px",
         },
       },
     },
     fill: {
-      opacity: 1,
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 90, 100],
+      },
     },
     tooltip: {
-      x: {
-        show: false,
-      },
+      theme: "light",
+      marker: { show: true },
       y: {
-        formatter: (val: number) => `${val}`,
+        formatter: (val: number) => `${val} users`,
       },
     },
+    legend: {
+      position: "top",
+      horizontalAlign: "center",
+      fontSize: "13px",
+      fontWeight: 500,
+      labels: { colors: "#6B7280" },
+      markers: {
+        size: 10, // ✅ use size instead of width/height
+        strokeWidth: 0,
+        shape: "circle",
+      },
+      itemMargin: { horizontal: 10 },
+    },
   };
+
   const series = [
     {
       name: "NDIS Members",
@@ -104,33 +119,30 @@ export default function MonthlyUsersChart() {
       name: "Business Members",
       data: businessData,
     },
+    {
+      name: "Cab Owners",
+      data: cabOwners,
+    },
   ];
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  function toggleDropdown() {
-    setIsOpen(!isOpen);
-  }
-
-  function closeDropdown() {
-    setIsOpen(false);
-  }
-
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-      <div className="flex items-center justify-between">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Users
-        </h3>       
+          Monthly User Growth
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Insights by user role
+        </p>
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">
-        <div className="-ml-5 min-w-[650px] xl:min-w-full pl-2">
+        <div className="min-w-[600px] xl:min-w-full">
           <ReactApexChart
             options={options}
             series={series}
-            type="bar"
-            height={180}
+            type="line"
+            height={280}
           />
         </div>
       </div>
