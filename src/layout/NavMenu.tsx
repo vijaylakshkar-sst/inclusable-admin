@@ -25,6 +25,10 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     subItems: [
       {
+        name: "Cancellations Rules",
+        path: "/admin/masters/cancellation-rules",       
+      }, 
+      {
         name: "Cab Types",
         path: "/admin/masters/cab-types",       
       }, 

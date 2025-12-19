@@ -16,15 +16,18 @@ import {
 } from '@/api/masters/vehicleModelAPI';
 
 import { VehicleMake, getVehicleMakesApi } from '@/api/masters/vehicleMakesAPI';
+import { CabType, getCabTypesApi } from '@/api/masters/cabTypesAPI';
 
 export default function VehicleModelsPage() {
   const [vehicleModels, setVehicleModels] = useState<VehicleModel[]>([]);
   const [vehicleMakes, setVehicleMakes] = useState<VehicleMake[]>([]);
+  const [cabTypes, setCabTypes] = useState<CabType[]>([]);
   const [loading, setLoading] = useState(false);
   const [editItem, setEditItem] = useState<VehicleModel | null>(null);
 
   const [form, setForm] = useState({
     make_id: '',
+    cab_type_id: '',
     name: '',
   });
 
@@ -39,6 +42,15 @@ export default function VehicleModelsPage() {
       setVehicleMakes(res.data);
     } catch (err: any) {
       toast.error(err?.message || 'Error loading vehicle makes');
+    }
+  };
+
+  const fetchCabTypes = async () => {
+    try {
+      const res = await getCabTypesApi();
+      setCabTypes(res.data);
+    } catch (err: any) {
+      toast.error(err?.message || 'Error loading cab types');
     }
   };
 
@@ -57,23 +69,24 @@ export default function VehicleModelsPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!form.make_id || !form.name) {
-      toast.error('Please select a make and enter a model name');
+    if (!form.make_id || !form.cab_type_id || !form.name) {
+      toast.error('Make, Cab Type & Model Name required');
       return;
     }
 
     try {
       const payload = {
         make_id: Number(form.make_id),
+        cab_type_id: Number(form.cab_type_id),
         name: form.name,
       };
 
       if (editItem) {
         await updateVehicleModelApi(editItem.id!, payload);
-        toast.success('Vehicle model updated successfully!');
+        toast.success('Vehicle model updated');
       } else {
         await createVehicleModelApi(payload);
-        toast.success('Vehicle model created successfully!');
+        toast.success('Vehicle model created');
       }
 
       resetForm();
@@ -87,6 +100,7 @@ export default function VehicleModelsPage() {
     setEditItem(item);
     setForm({
       make_id: String(item.make_id),
+      cab_type_id: String(item.cab_type_id),
       name: item.name,
     });
   };
@@ -94,17 +108,17 @@ export default function VehicleModelsPage() {
   const handleDelete = async (id: number) => {
     const confirm = await Swal.fire({
       title: 'Delete Vehicle Model?',
-      text: 'Are you sure you want to delete this vehicle model?',
+      text: 'Are you sure?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Yes',
     });
 
     if (confirm.isConfirmed) {
       try {
         await deleteVehicleModelApi(id);
-        toast.success('Deleted successfully');
+        toast.success('Deleted');
         fetchVehicleModels();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to delete');
@@ -113,25 +127,20 @@ export default function VehicleModelsPage() {
   };
 
   const resetForm = () => {
-    setForm({ make_id: '', name: '' });
+    setForm({ make_id: '', cab_type_id: '', name: '' });
     setEditItem(null);
   };
 
   useEffect(() => {
     fetchVehicleMakes();
+    fetchCabTypes();
     fetchVehicleModels();
   }, []);
 
   const columns = [
-    {
-      name: 'Model Name',
-      selector: (row: VehicleModel) => row.name,
-      sortable: true,
-    },
-    {
-      name: 'Make Name',
-      selector: (row: VehicleModel) => row.make_name || '—',
-    },
+    { name: 'Model', selector: (row: VehicleModel) => row.name },
+    { name: 'Make', selector: (row: VehicleModel) => row.make_name ?? "" },
+    { name: 'Cab Type', selector: (row: VehicleModel) => row.cab_type_name || '—' },
     {
       name: 'Actions',
       cell: (row: VehicleModel) => (
@@ -149,12 +158,14 @@ export default function VehicleModelsPage() {
 
   return (
     <div className="p-6 flex gap-6">
-      {/* Left: Form */}
       <div className="w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
           {editItem ? 'Edit Vehicle Model' : 'Add New Vehicle Model'}
         </h2>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          
+          {/* Vehicle Make */}
           <select
             name="make_id"
             value={form.make_id}
@@ -166,6 +177,22 @@ export default function VehicleModelsPage() {
             {vehicleMakes.map(make => (
               <option key={make.id} value={make.id}>
                 {make.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Cab Type */}
+          <select
+            name="cab_type_id"
+            value={form.cab_type_id}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded"
+            required
+          >
+            <option value="">Select Cab Type</option>
+            {cabTypes.map(ct => (
+              <option key={ct.id} value={ct.id}>
+                {ct.name}
               </option>
             ))}
           </select>
@@ -193,7 +220,6 @@ export default function VehicleModelsPage() {
         </form>
       </div>
 
-      {/* Right: Table */}
       <div className="w-2/3">
         <DataTable
           columns={columns}

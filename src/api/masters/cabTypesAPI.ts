@@ -2,68 +2,95 @@
 
 import { requestApi } from '../index';
 
+// ==============================
+// CAB TYPE INTERFACE (UPDATED)
+// ==============================
 export interface CabType {
   id?: number;
   name: string;
-  category: string;
-  thumbnail: string;
-  fare_per_km: string;
-  seating_capacity: string;
-  luggage_capacity: string;
-  description: string;
-  created_at?: string;  
+  standard_price: string;
+  disability_feature_price: string;
+  thumbnail_url?: string;
+  created_at?: string;
   updated_at?: string;
 }
 
+// ==============================
+// GENERIC API RESPONSE
+// ==============================
 export interface ApiResponse<T> {
   status: boolean;
   data: T;
+  message?: string;
 }
 
-// List all Cab Type
+// ==============================
+// GET ALL CAB TYPES
+// ==============================
 export const getCabTypesApi = async (): Promise<ApiResponse<CabType[]>> => {
   return await requestApi({
     url: '/admin/cab-types',
     method: 'GET',
-    successMessage: 'Cab Type fetched successfully!',
+    successMessage: 'Cab types fetched successfully!',
   });
 };
 
-// Get single Cab Type by ID
-export const getCabTypeByIdApi = async (id: number): Promise<ApiResponse<CabType>> => {
+// ==============================
+// GET CAB TYPE BY ID
+// ==============================
+export const getCabTypeByIdApi = async (
+  id: number
+): Promise<ApiResponse<CabType>> => {
   return await requestApi({
     url: `/admin/cab-types/${id}`,
     method: 'GET',
   });
 };
 
-// Create Cab Type
-export const createCabTypeApi = async (formData: FormData): Promise<ApiResponse<CabType>> => {
+// ==============================
+// CREATE CAB TYPE
+// ==============================
+export const createCabTypeApi = async (
+  formData: FormData
+): Promise<ApiResponse<CabType>> => {
   return await requestApi({
     url: '/admin/cab-types',
     method: 'POST',
     data: formData,
-    headers: { 'Content-Type': 'multipart/form-data' },
-    successMessage: 'Cab Type created successfully!',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    successMessage: 'Cab type created successfully!',
   });
 };
 
-// Update Cab Type
-export const updateCabTypeApi = async (id: number, formData: FormData): Promise<ApiResponse<CabType>> => {
+// ==============================
+// UPDATE CAB TYPE
+// ==============================
+export const updateCabTypeApi = async (
+  id: number,
+  formData: FormData
+): Promise<ApiResponse<CabType>> => {
   return await requestApi({
     url: `/admin/cab-types/${id}`,
     method: 'PUT',
     data: formData,
-    headers: { 'Content-Type': 'multipart/form-data' },
-    successMessage: 'Cab Type updated successfully!',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    successMessage: 'Cab type updated successfully!',
   });
 };
 
-// Delete Cab Type
-export const deleteCabTypeApi = async (id: number): Promise<ApiResponse<string>> => {
+// ==============================
+// DELETE CAB TYPE
+// ==============================
+export const deleteCabTypeApi = async (
+  id: number
+): Promise<ApiResponse<string>> => {
   return await requestApi({
     url: `/admin/cab-types/${id}`,
     method: 'DELETE',
-    successMessage: 'Cab Type deleted successfully!',
+    successMessage: 'Cab type deleted successfully!',
   });
 };

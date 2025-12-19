@@ -5,8 +5,10 @@ import { requestApi } from '../index';
 export interface VehicleModel {
   id?: number;
   make_id: number;
+  cab_type_id: number;
   name: string;
   make_name?: string;
+  cab_type_name?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -16,7 +18,9 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-// 🧩 List all Vehicle Models
+/**
+ * 🧩 List all Vehicle Models
+ */
 export const getVehicleModelsApi = async (): Promise<ApiResponse<VehicleModel[]>> => {
   return await requestApi({
     url: '/admin/vehicle-models',
@@ -24,17 +28,23 @@ export const getVehicleModelsApi = async (): Promise<ApiResponse<VehicleModel[]>
   });
 };
 
-// 🧩 Get Vehicle Model by ID
-export const getVehicleModelByIdApi = async (id: number): Promise<ApiResponse<VehicleModel>> => {
+/**
+ * 🧩 Get Vehicle Model by ID
+ */
+export const getVehicleModelByIdApi = async (
+  id: number
+): Promise<ApiResponse<VehicleModel>> => {
   return await requestApi({
     url: `/admin/vehicle-models/${id}`,
     method: 'GET',
   });
 };
 
-// 🧩 Create Vehicle Model (JSON body)
+/**
+ * 🧩 Create Vehicle Model
+ */
 export const createVehicleModelApi = async (
-  data: { make_id: string | number; name: string }
+  data: { make_id: number | string; cab_type_id: number | string; name: string }
 ): Promise<ApiResponse<VehicleModel>> => {
   return await requestApi({
     url: '/admin/vehicle-models',
@@ -45,10 +55,12 @@ export const createVehicleModelApi = async (
   });
 };
 
-// 🧩 Update Vehicle Model (JSON body)
+/**
+ * 🧩 Update Vehicle Model
+ */
 export const updateVehicleModelApi = async (
   id: number,
-  data: { make_id: string | number; name: string }
+  data: { make_id?: number | string; cab_type_id?: number | string; name?: string }
 ): Promise<ApiResponse<VehicleModel>> => {
   return await requestApi({
     url: `/admin/vehicle-models/${id}`,
@@ -59,8 +71,12 @@ export const updateVehicleModelApi = async (
   });
 };
 
-// 🧩 Delete Vehicle Model
-export const deleteVehicleModelApi = async (id: number): Promise<ApiResponse<string>> => {
+/**
+ * 🧩 Delete Vehicle Model
+ */
+export const deleteVehicleModelApi = async (
+  id: number
+): Promise<ApiResponse<string>> => {
   return await requestApi({
     url: `/admin/vehicle-models/${id}`,
     method: 'DELETE',

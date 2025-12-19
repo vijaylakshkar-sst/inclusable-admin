@@ -7,50 +7,49 @@ import Swal from 'sweetalert2';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
 import {
-  CabType,
-  getCabTypesApi,
-  createCabTypeApi,
-  updateCabTypeApi,
-  deleteCabTypeApi,
-} from '@/api/masters/cabTypesAPI';
+  CancellationRule,
+  getCancellationRulesApi,
+  createCancellationRuleApi,
+  updateCancellationRuleApi,
+  deleteCancellationRuleApi,
+} from '@/api/masters/cancellationRulesAPI';
 
 import Button from '@/components/ui/button/Button';
 
-export default function CabTypePage() {
-  const [cabTypes, setCabTypes] = useState<CabType[]>([]);
+export default function CancellationRules() {
+  const [rules, setRules] = useState<CancellationRule[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editItem, setEditItem] = useState<CabType | null>(null);
+  const [editItem, setEditItem] = useState<CancellationRule | null>(null);
 
   const [form, setForm] = useState({
-    name: '',
-    standard_price: '',
-    disability_feature_price: '',
-    thumbnail: null as File | null,
+    deduction_percentage: '',
+    minimum_deduction_amount: '',
+    active: true,
   });
 
   // ========================
   // FORM HANDLERS
   // ========================
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setForm(prev => ({ ...prev, thumbnail: file }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value, type, checked } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   // ========================
-  // FETCH CAB TYPES
+  // FETCH RULES
   // ========================
-  const fetchCabTypes = async () => {
+  const fetchRules = async () => {
     setLoading(true);
     try {
-      const res = await getCabTypesApi();
-      setCabTypes(res.data);
+      const res = await getCancellationRulesApi();
+      setRules(res.data);
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to load cab types');
+      toast.error(err?.message || 'Failed to load cancellation rules');
     } finally {
       setLoading(false);
     }
@@ -63,52 +62,45 @@ export default function CabTypePage() {
     e.preventDefault();
 
     try {
-      const formData = new FormData();
-      formData.append('name', form.name);
-      formData.append('standard_price', form.standard_price);
-      formData.append(
-        'disability_feature_price',
-        form.disability_feature_price
-      );
-
-      if (form.thumbnail) {
-        formData.append('thumbnail', form.thumbnail);
-      }
+      const payload = {
+        deduction_percentage: form.deduction_percentage,
+        minimum_deduction_amount: form.minimum_deduction_amount,
+        active: form.active,
+      };
 
       if (editItem) {
-        await updateCabTypeApi(editItem.id!, formData);
-        toast.success('Cab type updated successfully');
+        await updateCancellationRuleApi(editItem.id!, payload);
+        toast.success('Cancellation rule updated');
       } else {
-        await createCabTypeApi(formData);
-        toast.success('Cab type created successfully');
+        await createCancellationRuleApi(payload);
+        toast.success('Cancellation rule created');
       }
 
       resetForm();
-      fetchCabTypes();
+      fetchRules();
     } catch (err: any) {
       toast.error(err?.message || 'Submission failed');
     }
   };
 
   // ========================
-  // EDIT CAB TYPE
+  // EDIT
   // ========================
-  const handleEdit = (item: CabType) => {
+  const handleEdit = (item: CancellationRule) => {
     setEditItem(item);
     setForm({
-      name: item.name,
-      standard_price: item.standard_price,
-      disability_feature_price: item.disability_feature_price,
-      thumbnail: null,
+      deduction_percentage: item.deduction_percentage,
+      minimum_deduction_amount: item.minimum_deduction_amount,
+      active: item.active,
     });
   };
 
   // ========================
-  // DELETE CAB TYPE
+  // DELETE
   // ========================
   const handleDelete = async (id: number) => {
     const confirm = await Swal.fire({
-      title: 'Delete Cab Type?',
+      title: 'Delete Cancellation Rule?',
       text: 'This action cannot be undone',
       icon: 'warning',
       showCancelButton: true,
@@ -118,9 +110,9 @@ export default function CabTypePage() {
 
     if (confirm.isConfirmed) {
       try {
-        await deleteCabTypeApi(id);
-        toast.success('Cab type deleted');
-        fetchCabTypes();
+        await deleteCancellationRuleApi(id);
+        toast.success('Cancellation rule deleted');
+        fetchRules();
       } catch (err: any) {
         toast.error(err?.message || 'Delete failed');
       }
@@ -132,16 +124,15 @@ export default function CabTypePage() {
   // ========================
   const resetForm = () => {
     setForm({
-      name: '',
-      standard_price: '',
-      disability_feature_price: '',
-      thumbnail: null,
+      deduction_percentage: '',
+      minimum_deduction_amount: '',
+      active: true,
     });
     setEditItem(null);
   };
 
   useEffect(() => {
-    fetchCabTypes();
+    fetchRules();
   }, []);
 
   // ========================
@@ -149,34 +140,35 @@ export default function CabTypePage() {
   // ========================
   const columns = [
     {
-      name: 'Name',
-      selector: (row: CabType) => row.name,
+      name: 'Deduction (%)',
+      selector: (row: CancellationRule) =>
+        `${row.deduction_percentage}%`,
       sortable: true,
     },
     {
-      name: 'Standard Price',
-      selector: (row: CabType) => row.standard_price,
+      name: 'Minimum Amount',
+      selector: (row: CancellationRule) =>
+        `₹${row.minimum_deduction_amount}`,
     },
     {
-      name: 'Disability Price',
-      selector: (row: CabType) => row.disability_feature_price,
-    },
-    {
-      name: 'Thumbnail',
-      cell: (row: CabType) =>
-        row.thumbnail_url ? (
-          <img
-            src={`${process.env.NEXT_PUBLIC_IMAGES_URL}/${row.thumbnail_url}`}
-            alt={row.name}
-            className="h-10 w-10 rounded object-cover"
-          />
-        ) : (
-          '—'
-        ),
+      name: 'Status',
+      selector: (row: CancellationRule) =>
+        row.active ? 'Active' : 'Inactive',
+      cell: (row: CancellationRule) => (
+        <span
+          className={`px-2 py-1 rounded text-xs ${
+            row.active
+              ? 'bg-green-100 text-green-700'
+              : 'bg-gray-200 text-gray-700'
+          }`}
+        >
+          {row.active ? 'Active' : 'Inactive'}
+        </span>
+      ),
     },
     {
       name: 'Actions',
-      cell: (row: CabType) => (
+      cell: (row: CancellationRule) => (
         <div className="flex gap-2">
           <button
             onClick={() => handleEdit(row)}
@@ -203,49 +195,46 @@ export default function CabTypePage() {
       {/* FORM */}
       <div className="w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
-          {editItem ? 'Edit Cab Type' : 'Add Cab Type'}
+          {editItem
+            ? 'Edit Cancellation Rule'
+            : 'Add Cancellation Rule'}
         </h2>
 
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4"
-          encType="multipart/form-data"
         >
           <input
-            name="name"
-            placeholder="Cab Type Name"
-            value={form.name}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded"
-            required
-          />
-
-          <input
-            name="standard_price"
+            name="deduction_percentage"
             type="number"
-            placeholder="Standard Price"
-            value={form.standard_price}
+            step="0.01"
+            placeholder="Deduction Percentage (%)"
+            value={form.deduction_percentage}
             onChange={handleChange}
             className="border px-3 py-2 rounded"
             required
           />
 
           <input
-            name="disability_feature_price"
+            name="minimum_deduction_amount"
             type="number"
-            placeholder="Disability Feature Price"
-            value={form.disability_feature_price}
+            step="0.01"
+            placeholder="Minimum Deduction Amount"
+            value={form.minimum_deduction_amount}
             onChange={handleChange}
             className="border px-3 py-2 rounded"
             required
           />
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="border px-3 py-2 rounded"
-          />
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="active"
+              checked={form.active}
+              onChange={handleChange}
+            />
+            Active
+          </label>
 
           <Button type="submit">
             {editItem ? 'Update' : 'Add'}
@@ -267,12 +256,12 @@ export default function CabTypePage() {
       <div className="w-2/3">
         <DataTable
           columns={columns}
-          data={cabTypes}
+          data={rules}
           progressPending={loading}
           pagination
           highlightOnHover
           persistTableHead
-          noDataComponent="No Cab Types Found"
+          noDataComponent="No Cancellation Rules Found"
         />
       </div>
     </div>
