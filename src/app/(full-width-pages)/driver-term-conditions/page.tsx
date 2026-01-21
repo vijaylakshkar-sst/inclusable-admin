@@ -6,24 +6,25 @@ import Footer from '@/components/layout/Footer';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import heroImage from '/public/hero.jpg';
-import { getPrivacyPolicysApi, PrivacyPolicy } from '@/api/auth/app_content';
+import { getTermsApi, TermCondition } from '@/api/auth/app_content';
 
-export default function PrivacyPolicyPage() {
-  const [data, setData] = useState<PrivacyPolicy[] | null>(null);
+export default function DriverTermConditionsPage() {
+  const [data, setData] = useState<TermCondition[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPolicy();
+    fetchTerms();
   }, []);
 
-  const fetchPolicy = async () => {
+  const fetchTerms = async () => {
     try {
-      const res = await getPrivacyPolicysApi();
+      const res = await getTermsApi();
+      console.log(res,'res');
       if (res.status) {
         setData(res.data);
       }
     } catch (error) {
-      console.error('Error fetching Privacy Policy:', error);
+      console.error('Error fetching Terms & Conditions:', error);
     }
     setLoading(false);
   };
@@ -51,7 +52,7 @@ export default function PrivacyPolicyPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                Privacy Policy
+                Terms & Conditions
               </motion.h1>
 
               <motion.p
@@ -60,29 +61,29 @@ export default function PrivacyPolicyPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                Learn how we collect, store, and handle your personal information responsibly.
+                Please read our terms carefully before using the Inclusable Platform.
               </motion.p>
             </div>
           </div>
         </section>
 
-        {/* Privacy Policy Content */}
-        <section className="container mx-auto py-12 px-4 prose max-w-4xl numbered">
-          {loading ? (
-            <p>Loading content...</p>
-          ) : data && data.length > 0 ? (
-            data
-              .filter(item => item.title === 'Users Privacy Policy')
-              .map(item => (
-                <div key={item.id}>
-                  <h2>{item.title}</h2>
-                  <div dangerouslySetInnerHTML={{ __html: item.content }} />
-                </div>
-              ))
-          ) : (
-            <p>No Privacy Policy found.</p>
-          )}
-        </section>
+        {/* Terms Content */}
+      <section className="container mx-auto py-12 px-4 prose max-w-4xl">
+        {loading ? (
+          <p>Loading content...</p>
+        ) : data && data.length > 0 ? (
+          data
+            .filter((item) => item.title === "Driver Term") // 🔥 only show User Term
+            .map((item) => (
+              <div key={item.id}>
+                {/* <h2>{item.title}</h2> */}
+                <div dangerouslySetInnerHTML={{ __html: item.content }} />
+              </div>
+            ))
+        ) : (
+          <p>No Terms and Conditions found.</p>
+        )}
+      </section>
 
         <Footer />
       </>

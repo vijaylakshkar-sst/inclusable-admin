@@ -156,13 +156,15 @@ export default function PrivacyPolicyPage() {
           {editPrivacyPolicy ? 'Edit Term' : 'Add New Term'}
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Title"
+          <select
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border px-3 py-2 rounded"
-          />
+            className="border px-3 py-2 rounded bg-white"
+          >
+            <option value="">Select Title</option>
+            <option value="Driver Privacy Policy">Driver Privacy Policy</option>
+            <option value="Users Privacy Policy">Users Privacy Policy</option>
+          </select>
           <div className="mb-2 border rounded">
             <Tiptap
                 key={editPrivacyPolicy?.id ?? 'new'} // remounts editor on edit

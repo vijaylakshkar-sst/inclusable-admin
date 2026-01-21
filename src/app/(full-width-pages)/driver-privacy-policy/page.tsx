@@ -70,18 +70,18 @@ export default function PrivacyPolicyPage() {
         <section className="container mx-auto py-12 px-4 prose max-w-4xl numbered">
           {loading ? (
             <p>Loading content...</p>
-          ) : data && data.length > 0 ? (
+            ) : data && data.length > 0 ? (
             data
-              .filter(item => item.title === 'Users Privacy Policy')
-              .map(item => (
+                .filter(item => item.title === 'Driver Privacy Policy')
+                .map(item => (
                 <div key={item.id}>
-                  <h2>{item.title}</h2>
-                  <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                    <h2>{item.title}</h2>
+                    <div dangerouslySetInnerHTML={{ __html: item.content }} />
                 </div>
-              ))
-          ) : (
+                ))
+            ) : (
             <p>No Privacy Policy found.</p>
-          )}
+            )}
         </section>
 
         <Footer />

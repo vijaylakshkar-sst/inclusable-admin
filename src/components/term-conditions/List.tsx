@@ -162,13 +162,16 @@ export default function TermsListPage() {
           {editingTerm ? 'Edit Term' : 'Add New Term'}
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Title"
+          <select
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border px-3 py-2 rounded"
-          />
+            className="border px-3 py-2 rounded bg-white"
+          >
+            <option value="">Select Title</option>
+            <option value="Driver Term">Driver Term</option>
+            <option value="Provider Term">Provider Term</option>
+            <option value="User Term">User Term</option>
+          </select>
           <div className="mb-2 border rounded">
             <Tiptap
                 key={editingTerm?.id ?? 'new'} // remounts editor on edit
