@@ -3,11 +3,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { useAuth } from "@/context/AuthContext"; // ✅ import context
+import UpdatePasswordModal from "@/components/header/UpdatePasswordModal";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth(); // ✅ get user & logout from context
-
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation();
     setIsOpen((prev) => !prev);
@@ -74,6 +75,15 @@ export default function UserDropdown() {
 
         <button
           onClick={() => {
+            setIsPasswordModalOpen(true);
+            closeDropdown();
+          }}
+          className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+        >
+          🔒 Update Password
+        </button>
+        <button
+          onClick={() => {
             logout();
             closeDropdown();
           }}
@@ -97,6 +107,10 @@ export default function UserDropdown() {
           Sign out
         </button>
       </Dropdown>
+      <UpdatePasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+      />
     </div>
   );
 }

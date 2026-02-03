@@ -1,8 +1,9 @@
 // src/api/auth/changePassword.ts
-import { requestApi } from '../index';
+import { requestApi } from "../index";
 
 interface ChangePasswordPayload {
-  password: string;
+  currentPassword: string;
+  newPassword: string;
   resetToken: string;
 }
 
@@ -12,16 +13,21 @@ interface ChangePasswordResponse {
   [key: string]: any;
 }
 
-export const changePasswordApi = async (
-  { password, resetToken }: ChangePasswordPayload
-): Promise<ChangePasswordResponse> => {
+export const changePasswordApi = async ({
+  currentPassword,
+  newPassword,
+  resetToken,
+}: ChangePasswordPayload): Promise<ChangePasswordResponse> => {
   try {
     const response = await requestApi<ChangePasswordResponse>({
-      url: '/change-password',
-      method: 'POST',
-      data: { password },
+      url: "/change-password",
+      method: "PUT",
+      data: {
+        current_password:currentPassword,
+        new_password:newPassword,
+      },
       headers: {
-        resetToken: resetToken || '',
+        resetToken,
       },
     });
 
@@ -29,7 +35,11 @@ export const changePasswordApi = async (
   } catch (error: any) {
     return {
       status: false,
-      message: error.response?.data?.message || error.message || 'Something went wrong',
+      message:
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        "Something went wrong",
     };
   }
 };

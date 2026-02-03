@@ -4,37 +4,41 @@ import React, { useEffect, useState } from 'react'
 import Input from '@/components/form/input/InputField'
 import Label from '@/components/form/Label'
 import Button from '@/components/ui/button/Button'
-import { changePasswordApi } from '@/api/auth/changePassword' // You need to implement this API wrapper
+import { changePasswordApi } from '@/api/auth/changePassword'
 import { useRouter } from 'next/navigation'
 
 export default function ChangePasswordForm() {
   const router = useRouter()
-  const [password, setPassword] = useState('')
+
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState(false)
 
+  useEffect(() => {
+    localStorage.removeItem('forgot_email')
+  }, [])
+
   const validatePasswords = () => {
-    if (!password || password.length < 6) {
-      return 'Password must be at least 6 characters.'
+    if (!currentPassword) {
+      return 'Current password is required.'
     }
-    if (password !== confirmPassword) {
+    if (!newPassword || newPassword.length < 6) {
+      return 'New password must be at least 6 characters.'
+    }
+    if (newPassword !== confirmPassword) {
       return 'Passwords do not match.'
     }
     return ''
   }
 
-  useEffect(() => {
-    localStorage.removeItem('forgot_email')
-  }, [password, confirmPassword])
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setTouched(true)
     setError('')
-    setSuccess('')
 
     const validationError = validatePasswords()
     if (validationError) {
@@ -43,18 +47,20 @@ export default function ChangePasswordForm() {
     }
 
     setLoading(true)
+
     try {
-      const resetToken = localStorage.getItem('reset_token') || "" // ✅ Or get from router param
-     
-      const res = await changePasswordApi({ password, resetToken })
+      const resetToken = localStorage.getItem('reset_token') || ''
+
+      const res = await changePasswordApi({
+        currentPassword,
+        newPassword,
+        resetToken,
+      })
 
       if (res.status) {
-        // setSuccess(res.message || 'Password changed successfully')
-        setTimeout(() => {
-          router.push('/password-complete?success=1') // ✅ Navigate to success message
-        }, 500)
+        router.push('/password-complete?success=1')
       } else {
-        setError(res.message || 'Something went wrong')
+        setError(res.message || 'Unable to change password')
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong')
@@ -67,34 +73,55 @@ export default function ChangePasswordForm() {
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
-      <div className="w-full max-w-md sm:pt-10 mx-auto mb-5" />
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
-          <div className="mb-5 sm:mb-8">
-            <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+          <div className="mb-6">
+            <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90">
               Change Password
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your new password to reset your account.
+              Enter your current and new password.
             </p>
           </div>
 
           <form onSubmit={handleSubmit}>
+            {/* Current Password */}
             <div className="mb-4">
-              <Label>New Password<span className="text-error-500">*</span></Label>
+              <Label>
+                Current Password <span className="text-error-500">*</span>
+              </Label>
               <Input
                 type="password"
-                value={password}
-                placeholder="Enter new password"
+                value={currentPassword}
+                placeholder="Enter current password"
                 onChange={(e) => {
-                  setPassword(e.target.value)
+                  setCurrentPassword(e.target.value)
                   setTouched(true)
                 }}
               />
             </div>
 
+            {/* New Password */}
             <div className="mb-4">
-              <Label>Confirm Password<span className="text-error-500">*</span></Label>
+              <Label>
+                New Password <span className="text-error-500">*</span>
+              </Label>
+              <Input
+                type="password"
+                value={newPassword}
+                placeholder="Enter new password"
+                onChange={(e) => {
+                  setNewPassword(e.target.value)
+                  setTouched(true)
+                }}
+              />
+            </div>
+
+            {/* Confirm Password */}
+            <div className="mb-4">
+              <Label>
+                Confirm Password <span className="text-error-500">*</span>
+              </Label>
               <Input
                 type="password"
                 value={confirmPassword}
@@ -109,8 +136,9 @@ export default function ChangePasswordForm() {
               )}
             </div>
 
-            {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
-            {success && <p className="text-sm text-green-600 mb-2">{success}</p>}
+            {error && (
+              <p className="text-sm text-red-600 mb-3">{error}</p>
+            )}
 
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? 'Changing Password...' : 'Change Password'}

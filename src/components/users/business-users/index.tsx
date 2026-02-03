@@ -141,7 +141,28 @@ const handleDelete = async (row: BusinessMember) => {
     );
   };
 
-  const uniqueCategories = [...new Set(businessMembers.map((m) => m.business_category).filter(Boolean))];
+
+  const normalizeCategories = (category: any): string[] => {
+  if (!category) return [];
+
+  if (Array.isArray(category)) {
+    return category.map((c) => String(c).trim());
+  }
+
+  if (typeof category === 'string') {
+    return category.split(',').map((c) => c.trim());
+  }
+
+  return [];
+};
+
+const uniqueCategories = Array.from(
+  new Set(
+    businessMembers.flatMap((m) =>
+      normalizeCategories(m.business_category)
+    )
+  )
+);
 
   const filteredData = businessMembers.filter((member) =>
   (
@@ -151,7 +172,12 @@ const handleDelete = async (row: BusinessMember) => {
     member.abn_number?.toLowerCase().includes(searchText.toLowerCase()) ||
     String(member.business_category || '').toLowerCase().includes(searchText.toLowerCase())
   ) &&
-  (categoryFilter ? member.business_category === categoryFilter : true)
+  (categoryFilter
+  ? member.business_category
+      ?.split(',')
+      .map((c) => c.trim())
+      .includes(categoryFilter)
+  : true)
 );
 
   const handleDeleteEvent = async (event: any) => {
@@ -284,11 +310,12 @@ const handleDelete = async (row: BusinessMember) => {
           className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-md"
         >
           <option value="">All Categories</option>
-          {uniqueCategories.map((cat) => (
-            <option key={cat} value={cat}>
+         {uniqueCategories.map((cat) => (
+            <option key={`category-${cat}`} value={cat}>
               {cat}
             </option>
           ))}
+
         </select>
 
         <button

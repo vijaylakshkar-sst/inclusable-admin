@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContextType, User } from "@/types/auth";
+import { changePasswordApi } from "@/api/auth/changePassword";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -12,39 +13,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Check token on mount
   useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        
-        if (data.status && data.data) {
-          // 🚫 Block Admin login         
-           
-          if (data.data.role === "Admin") {
-            setUser(data.data);
-           
-          } else {
-            alert("You are not authorized to access this panel.");
-            localStorage.removeItem("token");
-            setUser(null);
-            router.push("/admin/signin");
-          }
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch(() => {
-        setUser(null);
-        setLoading(false);
-      });
-  } else {
-    setLoading(false);
-  }
-}, []);
+        .then((res) => res.json())
+        .then((data) => {
+
+          if (data.status && data.data) {
+            // 🚫 Block Admin login         
+
+            if (data.data.role === "Admin") {
+              setUser(data.data);
+
+            } else {
+              alert("You are not authorized to access this panel.");
+              localStorage.removeItem("token");
+              setUser(null);
+              router.push("/admin/signin");
+            }
+          } else {
+            setUser(null);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setUser(null);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
 
   const login = async (email: string, password: string) => {
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const data = await res.json();
     console.log(data);
-    
+
     if (res.ok && data.token) {
       localStorage.setItem("token", data.token);
       setUser(data.data.user);
@@ -72,8 +73,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     router.push("/admin/signin");
   };
 
+  const updatePassword = async ({
+    currentPassword,
+    newPassword,
+  }: {
+    currentPassword: string;
+    newPassword: string;
+  }) => {
+    const resetToken = localStorage.getItem("token");
+
+    if (!resetToken) {
+      throw new Error("Unauthorized");
+    }
+
+    const res = await changePasswordApi({
+      currentPassword,
+      newPassword,
+      resetToken,
+    });
+
+    if (!res.status) {
+      throw new Error(res.message || "Password update failed");
+    }
+  };
+
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );
