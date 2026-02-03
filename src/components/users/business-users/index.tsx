@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import toast from 'react-hot-toast';
 import { FaTrash, FaDownload } from 'react-icons/fa';
-import { BusinessMember, getBusinessMembers, deleteUser, eventByBusiness,deleteEvent } from '@/api/users/userApi';
+import { BusinessMember, getBusinessMembers, deleteUser, eventByBusiness, deleteEvent } from '@/api/users/userApi';
 import Papa from 'papaparse';
 import Swal from 'sweetalert2';
 
@@ -36,32 +36,32 @@ const BusinessUsersPage = () => {
     }
   }, []);
 
-const handleDelete = async (row: BusinessMember) => {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: `Delete Business Member: ${row.full_name}?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!',
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const res = await deleteUser(row.id);
-        if (res.status) {
-          toast.success('Member deleted successfully');
-          setBusinessMembers(businessMembers.filter((m) => m.id !== row.id));
-        } else {
-          toast.error(res.message || 'Failed to delete member');
+  const handleDelete = async (row: BusinessMember) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Delete Business Member: ${row.full_name}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deleteUser(row.id);
+          if (res.status) {
+            toast.success('Member deleted successfully');
+            setBusinessMembers(businessMembers.filter((m) => m.id !== row.id));
+          } else {
+            toast.error(res.message || 'Failed to delete member');
+          }
+        } catch (err) {
+          console.error(err);
+          toast.error('Error deleting member');
         }
-      } catch (err) {
-        console.error(err);
-        toast.error('Error deleting member');
       }
-    }
-  });
-};
+    });
+  };
 
   const fetchEvents = async (row: BusinessMember) => {
     if (!expandedRows[row.id]) {
@@ -78,50 +78,76 @@ const handleDelete = async (row: BusinessMember) => {
     }
   };
 
-  const BusinessColumns: TableColumn<BusinessMember>[] = [
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <button onClick={() => handleDelete(row)} className="text-red-500 hover:text-red-700">
-          <FaTrash />
-        </button>
-      ),
-      width: '80px',
-    },
-    { name: 'Name', selector: (row) => row.full_name, sortable: true },
-    { name: 'Business Name', selector: (row) => row.business_name, sortable: true },
-    {
-      name: 'Category',
-      selector: (row) => row.business_category,
-      sortable: true,
-    },
-    { name: 'Business Email', selector: (row) => row.business_email || 'N/A', sortable: true },
-    { name: 'ABN Number', selector: (row) => row.abn_number || 'N/A', sortable: true },
-    { name: 'Year Experience', selector: (row) => `${row.year_experience} Years`, sortable: true },
-  ];
+  const WrapText = ({ text }: { text: any }) => (
+  <div className="whitespace-normal break-words leading-snug max-w-[300px]">
+    {text || 'N/A'}
+  </div>
+);
 
-  const EventColumns: TableColumn<any>[] = [    
-    { name: 'Event Name', selector: (e) => e.event_name, sortable: true },
-    { name: 'Start Date', selector: (e) => e.start_date, sortable: true },
-    { name: 'End Date', selector: (e) => e.end_date, sortable: true },
-    { name: 'Start Time', selector: (e) => e.start_time, sortable: true },
-    { name: 'End Time', selector: (e) => e.end_time, sortable: true },
-    { name: 'Address', selector: (e) => e.event_address, sortable: true },
-    { name: 'Price', selector: (e) => `${e.price || ''} AUD`, sortable: true },
-    { name: 'Price Type', selector: (e) => `${e.price_type}`, sortable: true },
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <button
-          className="text-red-500 hover:text-red-700"
-          onClick={() => handleDeleteEvent(row)}
-        >
-          <FaTrash />
-        </button>
-      ),
-      width: '80px',
-    },
-  ];
+  const BusinessColumns: TableColumn<BusinessMember>[] = [
+  {
+    name: 'Actions',
+    cell: (row) => (
+      <button onClick={() => handleDelete(row)} className="text-red-500 hover:text-red-700">
+        <FaTrash />
+      </button>
+    ),
+  },
+  {
+    name: 'Name',
+    cell: (row) => <WrapText text={row.full_name} />,
+    sortable: true,
+  },
+  {
+    name: 'Business Name',
+    cell: (row) => <WrapText text={row.business_name} />,
+    sortable: true,
+  },
+  {
+    name: 'Category',
+    cell: (row) => <WrapText text={row.business_category} />,
+    sortable: true,
+    grow: 2,
+  },
+  {
+    name: 'Business Email',
+    cell: (row) => <WrapText text={row.business_email} />,
+    sortable: true,
+  },
+  {
+    name: 'ABN Number',
+    selector: (row) => row.abn_number || 'N/A',
+  },
+  {
+    name: 'Experience',
+    selector: (row) => `${row.year_experience} Years`,
+  },
+];
+
+  const EventColumns: TableColumn<any>[] = [
+  {
+    name: 'Event Name',
+    cell: (e) => <WrapText text={e.event_name} />,
+  },
+  {
+    name: 'Address',
+    cell: (e) => <WrapText text={e.event_address} />,
+  },
+  { name: 'Start Date', selector: (e) => e.start_date },
+  { name: 'End Date', selector: (e) => e.end_date },
+  { name: 'Start Time', selector: (e) => e.start_time },
+  { name: 'End Time', selector: (e) => e.end_time },
+  { name: 'Price', selector: (e) => `${e.price || ''} AUD` },
+  {
+    name: 'Actions',
+    cell: (row) => (
+      <button className="text-red-500" onClick={() => handleDeleteEvent(row)}>
+        <FaTrash />
+      </button>
+    ),
+    width: '70px',
+  },
+];
 
   const ExpandedComponent = ({ data }: { data: BusinessMember }) => {
     const events = expandedRows[data.id] || [];
@@ -143,102 +169,102 @@ const handleDelete = async (row: BusinessMember) => {
 
 
   const normalizeCategories = (category: any): string[] => {
-  if (!category) return [];
+    if (!category) return [];
 
-  if (Array.isArray(category)) {
-    return category.map((c) => String(c).trim());
-  }
+    if (Array.isArray(category)) {
+      return category.map((c) => String(c).trim());
+    }
 
-  if (typeof category === 'string') {
-    return category.split(',').map((c) => c.trim());
-  }
+    if (typeof category === 'string') {
+      return category.split(',').map((c) => c.trim());
+    }
 
-  return [];
-};
+    return [];
+  };
 
-const uniqueCategories = Array.from(
-  new Set(
-    businessMembers.flatMap((m) =>
-      normalizeCategories(m.business_category)
+  const uniqueCategories = Array.from(
+    new Set(
+      businessMembers.flatMap((m) =>
+        normalizeCategories(m.business_category)
+      )
     )
-  )
-);
+  );
 
   const filteredData = businessMembers.filter((member) =>
-  (
-    member.full_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-    member.business_name?.toLowerCase().includes(searchText.toLowerCase()) ||
-    member.business_email?.toLowerCase().includes(searchText.toLowerCase()) ||
-    member.abn_number?.toLowerCase().includes(searchText.toLowerCase()) ||
-    String(member.business_category || '').toLowerCase().includes(searchText.toLowerCase())
-  ) &&
-  (categoryFilter
-  ? member.business_category
-      ?.split(',')
-      .map((c) => c.trim())
-      .includes(categoryFilter)
-  : true)
-);
+    (
+      member.full_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+      member.business_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+      member.business_email?.toLowerCase().includes(searchText.toLowerCase()) ||
+      member.abn_number?.toLowerCase().includes(searchText.toLowerCase()) ||
+      String(member.business_category || '').toLowerCase().includes(searchText.toLowerCase())
+    ) &&
+    (categoryFilter
+      ? member.business_category
+        ?.split(',')
+        .map((c) => c.trim())
+        .includes(categoryFilter)
+      : true)
+  );
 
   const handleDeleteEvent = async (event: any) => {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: `Delete Event: ${event.event_name}?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!',
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const res = await deleteEvent(event.event_id);
-        if (res.status) {
-          toast.success('Event deleted successfully');
-          setExpandedRows((prev) => {
-            const updated = { ...prev };
-            for (const businessId in updated) {
-              updated[businessId] = updated[businessId].filter((e) => e.event_id !== event.event_id);
-            }
-            return updated;
-          });
-        } else {
-          toast.error(res.message || 'Failed to delete event');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Delete Event: ${event.event_name}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deleteEvent(event.event_id);
+          if (res.status) {
+            toast.success('Event deleted successfully');
+            setExpandedRows((prev) => {
+              const updated = { ...prev };
+              for (const businessId in updated) {
+                updated[businessId] = updated[businessId].filter((e) => e.event_id !== event.event_id);
+              }
+              return updated;
+            });
+          } else {
+            toast.error(res.message || 'Failed to delete event');
+          }
+        } catch (err) {
+          console.error(err);
+          toast.error('Error deleting event');
         }
-      } catch (err) {
-        console.error(err);
-        toast.error('Error deleting event');
       }
-    }
-  });
-};
+    });
+  };
 
- const handleExport = async () => {
+  const handleExport = async () => {
     const allData: any[] = [];
     let serial = 1;
 
     for (const member of filteredData) {
-        let events: any[] = [];
+      let events: any[] = [];
 
-        // Fetch events if not already fetched
-        if (!expandedRows[member.id]) {
+      // Fetch events if not already fetched
+      if (!expandedRows[member.id]) {
         try {
-            const res = await eventByBusiness(member.id);
-            if (res.status && res.data.events) {
+          const res = await eventByBusiness(member.id);
+          if (res.status && res.data.events) {
             events = res.data.events;
             setExpandedRows((prev) => ({ ...prev, [member.id]: events }));
-            }
+          }
         } catch (err) {
-            console.error('Error fetching events for export:', err);
+          console.error('Error fetching events for export:', err);
         }
-        } else {
+      } else {
         events = expandedRows[member.id];
-        }
+      }
 
-        // Flatten: 1 row per event (or 1 row if no event)
-        if (events.length) {
+      // Flatten: 1 row per event (or 1 row if no event)
+      if (events.length) {
         events.forEach((event) => {
-            allData.push({
+          allData.push({
             SNo: serial++,
             MemberName: member.full_name,
             BusinessName: member.business_name,
@@ -255,28 +281,28 @@ const uniqueCategories = Array.from(
             Address: event.event_address,
             Price: `${event.price || ''} AUD`,
             PriceType: event.price_type,
-            });
+          });
         });
-        } else {
+      } else {
         allData.push({
-            SNo: serial++,
-            MemberName: member.full_name,
-            BusinessName: member.business_name,
-            Category: member.business_category,
-            Email: member.business_email,
-            ABN: member.abn_number,
-            Experience: `${member.year_experience} Years`,
+          SNo: serial++,
+          MemberName: member.full_name,
+          BusinessName: member.business_name,
+          Category: member.business_category,
+          Email: member.business_email,
+          ABN: member.abn_number,
+          Experience: `${member.year_experience} Years`,
 
-            EventName: '',
-            StartDate: '',
-            EndDate: '',
-            StartTime: '',
-            EndTime: '',
-            Address: '',
-            Price: '',
-            PriceType: '',
+          EventName: '',
+          StartDate: '',
+          EndDate: '',
+          StartTime: '',
+          EndTime: '',
+          Address: '',
+          Price: '',
+          PriceType: '',
         });
-        }
+      }
     }
 
     const csv = Papa.unparse(allData);
@@ -288,18 +314,18 @@ const uniqueCategories = Array.from(
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    };
+  };
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Business Members</h2>
 
       {/* 🔍 Search and Filter */}
-      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <input
           type="text"
-          placeholder="Search by name, business, email, ABN, category..."
-          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          placeholder="Search..."
+          className="w-full md:w-[300px] px-3 py-1.5 text-sm border rounded focus:ring-2 focus:ring-blue-400"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
@@ -307,52 +333,51 @@ const uniqueCategories = Array.from(
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-md"
+          className="px-3 py-1.5 text-sm border rounded min-w-[180px]"
         >
           <option value="">All Categories</option>
-         {uniqueCategories.map((cat) => (
-            <option key={`category-${cat}`} value={cat}>
+          {uniqueCategories.map((cat) => (
+            <option key={cat} value={cat}>
               {cat}
             </option>
           ))}
-
         </select>
 
         <button
           onClick={handleExport}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
+          className="bg-blue-600 text-white px-3 py-1.5 text-sm rounded hover:bg-blue-700 flex items-center gap-1"
         >
-          <FaDownload /> Export
+          <FaDownload size={14} /> Export
         </button>
       </div>
-
-      <DataTable
-        columns={BusinessColumns}
-        data={filteredData}
-        progressPending={loading}
-        pagination
-        expandableRows
-        expandableRowsComponent={ExpandedComponent}
-        onRowExpandToggled={(expanded, row) => {
-          if (expanded) fetchEvents(row);
-        }}
-        striped
-        highlightOnHover
-        customStyles={{
-          headRow: {
-            style: {
-              backgroundColor: '#E5E7EB',
+      <div className="w-full overflow-x-auto">
+        <DataTable
+          columns={BusinessColumns}
+          data={filteredData}
+          progressPending={loading}
+          pagination
+          expandableRows
+          expandableRowsComponent={ExpandedComponent}
+          onRowExpandToggled={(expanded, row) => {
+            if (expanded) fetchEvents(row);
+          }}
+          striped
+          highlightOnHover
+          customStyles={{
+            headRow: {
+              style: {
+                backgroundColor: '#E5E7EB',
+              },
             },
-          },
-          rows: {
-            style: {
-              backgroundColor: '#FFFFFF',
+            rows: {
+              style: {
+                backgroundColor: '#FFFFFF',
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };
-
 export default BusinessUsersPage;
