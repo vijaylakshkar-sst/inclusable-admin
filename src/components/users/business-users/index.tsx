@@ -50,7 +50,6 @@ const BusinessUsersPage = () => {
         try {
           const res = await deleteUser(row.id);
           if (res.status) {
-            toast.success('Member deleted successfully');
             setBusinessMembers(businessMembers.filter((m) => m.id !== row.id));
           } else {
             toast.error(res.message || 'Failed to delete member');
@@ -199,10 +198,7 @@ const BusinessUsersPage = () => {
       String(member.business_category || '').toLowerCase().includes(searchText.toLowerCase())
     ) &&
     (categoryFilter
-      ? member.business_category
-        ?.split(',')
-        .map((c) => c.trim())
-        .includes(categoryFilter)
+      ? normalizeCategories(member.business_category).includes(categoryFilter)
       : true)
   );
 

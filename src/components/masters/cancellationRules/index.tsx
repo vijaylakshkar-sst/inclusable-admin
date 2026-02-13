@@ -69,11 +69,9 @@ export default function CancellationRules() {
       };
 
       if (editItem) {
-        await updateCancellationRuleApi(editItem.id!, payload);
-        toast.success('Cancellation rule updated');
+        await updateCancellationRuleApi(editItem.id!, payload);        
       } else {
         await createCancellationRuleApi(payload);
-        toast.success('Cancellation rule created');
       }
 
       resetForm();
@@ -111,7 +109,6 @@ export default function CancellationRules() {
     if (confirm.isConfirmed) {
       try {
         await deleteCancellationRuleApi(id);
-        toast.success('Cancellation rule deleted');
         fetchRules();
       } catch (err: any) {
         toast.error(err?.message || 'Delete failed');

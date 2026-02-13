@@ -22,7 +22,7 @@ export const getSupportTicktetApi = async (): Promise<ApiResponse<SupportTicket[
   return await requestApi({
     url: '/admin/support-tickets',
     method: 'GET',
-    successMessage: 'Support Tickets fetched successfully!',
+    // successMessage: 'Support Tickets fetched successfully!',
   });
 };
 

@@ -31,7 +31,7 @@ export const getCabTypesApi = async (): Promise<ApiResponse<CabType[]>> => {
   return await requestApi({
     url: '/admin/cab-types',
     method: 'GET',
-    successMessage: 'Cab types fetched successfully!',
+    // successMessage: 'Cab types fetched successfully!',
   });
 };
 

@@ -19,7 +19,7 @@ export const getVehicleMakesApi = async (): Promise<ApiResponse<VehicleMake[]>> 
   return await requestApi({
     url: '/admin/vehicle-makes',
     method: 'GET',
-    successMessage: 'Vehicle makes fetched successfully!',
+    // successMessage: 'Vehicle makes fetched successfully!',
   });
 };
 

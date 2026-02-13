@@ -77,10 +77,9 @@ export default function CabTypePage() {
 
       if (editItem) {
         await updateCabTypeApi(editItem.id!, formData);
-        toast.success('Cab type updated successfully');
+        
       } else {
         await createCabTypeApi(formData);
-        toast.success('Cab type created successfully');
       }
 
       resetForm();
@@ -119,7 +118,6 @@ export default function CabTypePage() {
     if (confirm.isConfirmed) {
       try {
         await deleteCabTypeApi(id);
-        toast.success('Cab type deleted');
         fetchCabTypes();
       } catch (err: any) {
         toast.error(err?.message || 'Delete failed');

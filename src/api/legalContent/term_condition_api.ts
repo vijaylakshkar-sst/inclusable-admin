@@ -20,7 +20,7 @@ export const getTermsApi = async (): Promise<ApiResponse<TermCondition[]>> => {
   return await requestApi({
     url: '/admin/terms-conditions',
     method: 'GET',
-    successMessage: 'Terms & Conditions fetched successfully!',
+    // successMessage: 'Terms & Conditions fetched successfully!',
   });
 };
 

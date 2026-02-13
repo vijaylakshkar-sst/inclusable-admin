@@ -83,10 +83,8 @@ export default function VehicleModelsPage() {
 
       if (editItem) {
         await updateVehicleModelApi(editItem.id!, payload);
-        toast.success('Vehicle model updated');
       } else {
         await createVehicleModelApi(payload);
-        toast.success('Vehicle model created');
       }
 
       resetForm();
@@ -118,7 +116,6 @@ export default function VehicleModelsPage() {
     if (confirm.isConfirmed) {
       try {
         await deleteVehicleModelApi(id);
-        toast.success('Deleted');
         fetchVehicleModels();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to delete');

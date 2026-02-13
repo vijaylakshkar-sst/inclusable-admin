@@ -52,7 +52,6 @@ const CabOwnersPage = () => {
         try {
           const res = await deleteCabOwner(row.id);
           if (res.status) {
-            toast.success('Cab Owner deleted successfully');
             setCabOwners(cabOwners.filter((owner) => owner.id !== row.id));
           } else {
             toast.error(res.message || 'Failed to delete Cab Owner');

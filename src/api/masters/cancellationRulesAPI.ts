@@ -31,7 +31,7 @@ export const getCancellationRulesApi = async (): Promise<
   return await requestApi({
     url: '/admin/cancellation-rules',
     method: 'GET',
-    successMessage: 'Cancellation rules fetched successfully!',
+    // successMessage: 'Cancellation rules fetched successfully!',
   });
 };
 

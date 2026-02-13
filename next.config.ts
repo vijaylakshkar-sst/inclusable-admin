@@ -7,24 +7,25 @@ const nextConfig: NextConfig = {
 
   reactStrictMode: false,
 
-  // ✅ Allow external images (for local + production servers)
   images: {
     remotePatterns: [
+      // ✅ Local server
       {
         protocol: "http",
         hostname: "192.168.0.15",
         port: "4000",
         pathname: "/uploads/**",
       },
-      // {
-      //   protocol: "https",
-      //   hostname: "yourdomain.com", // 👉 replace with your actual live domain when deployed
-      //   pathname: "/uploads/**",
-      // },
+
+      // ✅ Production server
+      {
+        protocol: "https",
+        hostname: "inclusable.app",
+        pathname: "/api/uploads/**",
+      },
     ],
   },
 
-  // ✅ Keep your SVG loader intact
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

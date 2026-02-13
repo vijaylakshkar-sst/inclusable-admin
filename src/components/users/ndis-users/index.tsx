@@ -108,7 +108,6 @@ const NdisUsersPage = () => {
                 try {
                     const res = await deleteUser(row.id);
                     if (res.status) {
-                        toast.success('Member deleted successfully');
                         setNdisMembers(ndisMembers.filter((m) => m.id !== row.id));
                     } else {
                         toast.error(res.message || 'Failed to delete member');

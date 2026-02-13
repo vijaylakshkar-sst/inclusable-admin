@@ -20,7 +20,7 @@ export const getPrivacyPolicysApi = async (): Promise<ApiResponse<PrivacyPolicy[
   return await requestApi({
     url: '/admin/privacy-policy',
     method: 'GET',
-    successMessage: 'Privacy Policy fetched successfully!',
+    // successMessage: 'Privacy Policy fetched successfully!',
   });
 };
 

@@ -94,7 +94,7 @@ export const getNdisMembers = async (): Promise<{ status: boolean; data: NdisMem
  return await requestApi({
     url: '/admin/users/ndis-members',
     method: 'GET',
-    successMessage: 'NDIS Members fetched successfully!',
+    // successMessage: 'NDIS Members fetched successfully!',
   });
 };
 
@@ -103,7 +103,7 @@ export const getBusinessMembers = async (): Promise<{ status: boolean; data: Bus
    return await requestApi({
     url: '/admin/users/business-members',
     method: 'GET',
-    successMessage: 'Business Members fetched successfully!',
+    // successMessage: 'Business Members fetched successfully!',
   });
 };
 
@@ -112,7 +112,7 @@ export const getCabOwners = async (): Promise<{ status: boolean; data: CabOwner[
   return await requestApi({
     url: '/admin/users/cab-owners',
     method: 'GET',
-    successMessage: 'Cab Owners fetched successfully!',
+    // successMessage: 'Cab Owners fetched successfully!',
   });
 };
 
@@ -123,7 +123,7 @@ export const getCabOwnerDetails = async (
   return await requestApi({
     url: `/admin/users/cab-owner/${id}`,
     method: 'GET',
-    successMessage: 'Cab Owner details fetched successfully!',
+    // successMessage: 'Cab Owner details fetched successfully!',
   });
 };
 
@@ -148,7 +148,7 @@ export const eventByBusiness = async (id: number) => {
    return await requestApi({
     url: '/admin/users/events-by-business/' + id,
     method: 'GET',
-    successMessage: 'Events Fetched successfully!',
+    // successMessage: 'Events Fetched successfully!',
   });
 };
 
@@ -156,7 +156,7 @@ export const userBookings = async (id: number) => {
    return await requestApi({
     url: '/admin/users/user-bookings/' + id,
     method: 'GET',
-    successMessage: 'Booking Fetched successfully!',
+    // successMessage: 'Booking Fetched successfully!',
   });
 };
 

@@ -49,10 +49,8 @@ export default function VehicleMakesPage() {
 
       if (editItem) {
         await updateVehicleMakeApi(editItem.id!, formData);
-        toast.success('Vehicle make updated successfully!');
       } else {
         await createVehicleMakeApi(formData);
-        toast.success('Vehicle make created successfully!');
       }
 
       resetForm();
@@ -82,7 +80,6 @@ export default function VehicleMakesPage() {
     if (confirm.isConfirmed) {
       try {
         await deleteVehicleMakeApi(id);
-        toast.success('Deleted successfully');
         fetchVehicleMakes();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to delete');

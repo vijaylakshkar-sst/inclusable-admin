@@ -44,7 +44,6 @@ export default function SupportTicketPage() {
     try {
       const res = await updateStatus(ticket.id!, { ...ticket, status: newStatus });
       if (res.status) {
-        toast.success('Ticket status updated successfully!');
         setSupportTickets((prev) =>
           prev.map((t) =>
             t.id === ticket.id ? { ...t, status: newStatus } : t
