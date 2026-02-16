@@ -77,7 +77,7 @@ export default function CabTypePage() {
 
       if (editItem) {
         await updateCabTypeApi(editItem.id!, formData);
-        
+
       } else {
         await createCabTypeApi(formData);
       }
@@ -197,9 +197,9 @@ export default function CabTypePage() {
   // UI
   // ========================
   return (
-    <div className="p-6 flex gap-6">
+    <div className="p-4 lg:p-6 flex flex-col lg:flex-row gap-6">
       {/* FORM */}
-      <div className="w-1/3 border p-4 rounded shadow">
+      <div className="w-full lg:w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
           {editItem ? 'Edit Cab Type' : 'Add Cab Type'}
         </h2>
@@ -262,7 +262,7 @@ export default function CabTypePage() {
       </div>
 
       {/* TABLE */}
-      <div className="w-2/3">
+      <div className="w-full lg:w-2/3">
         <DataTable
           columns={columns}
           data={cabTypes}

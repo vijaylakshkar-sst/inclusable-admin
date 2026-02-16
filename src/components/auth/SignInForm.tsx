@@ -4,6 +4,7 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -57,8 +58,19 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow">
+    <div className="w-full max-w-md mx-auto p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
       <div className="mb-6">
+        <div className="flex flex-col items-center">
+          <Link href="/" className="mb-4 backdrop-blur-sm  ">
+            <Image
+              width={180}
+              height={40}
+              src="/images/logo/logo-main.svg"
+              alt="Logo"
+              className="h-10 w-auto"
+            />
+          </Link>
+        </div>
         <Link
           href="/"
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
@@ -68,8 +80,8 @@ export default function SignInForm() {
         </Link>
       </div>
 
-      <div className="mb-6 text-center">
-        <h1 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white">
+      <div className="mb-8 text-center">
+        <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
           Sign In
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -82,51 +94,59 @@ export default function SignInForm() {
           <p className="text-red-500 text-sm text-center -mt-3">{error}</p>
         )}
 
-        <div>
-          <Label>
-            Email <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            type="email"
-            placeholder="info@example.com"
-            value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
-            
-          />
-        </div>
+        {error && (
+          <div className="p-3 rounded bg-red-50 text-red-500 text-sm text-center border border-red-100">
+            {error}
+          </div>
+        )}
 
-        <div>
-          <Label>
-            Password <span className="text-red-500">*</span>
-          </Label>
-          <div className="relative">
+        <div className="space-y-5">
+          <div>
+            <Label>
+              Email <span className="text-red-500">*</span>
+            </Label>
             <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={password}
+              type="email"
+              placeholder="info@example.com"
+              value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
+                setEmail(e.target.value)
               }
-              
+
             />
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            >
-              {showPassword ? (
-                <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
-              ) : (
-                <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
-              )}
-            </span>
+          </div>
+
+          <div>
+            <Label>
+              Password <span className="text-red-500">*</span>
+            </Label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
+
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+                )}
+              </span>
+            </div>
           </div>
         </div>
 
         <Button
-          className="w-full"
-          size="sm"
+          className="w-full mt-6 py-5"
+
           type="submit"
           disabled={loading}
         >

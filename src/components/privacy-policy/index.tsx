@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
     try {
       if (editPrivacyPolicy) {
         const res = await updatePrivacyPolicyApi(editPrivacyPolicy.id!, { title, content });
-        if (res.status) {          
+        if (res.status) {
           setPrivacyPolicies((prev) =>
             prev.map((t) =>
               t.id === editPrivacyPolicy.id ? { ...t, title, content } : t
@@ -81,7 +81,7 @@ export default function PrivacyPolicyPage() {
         }
       } else {
         const res = await createPrivacyPolicyApi({ title, content });
-        if (res.status) {          
+        if (res.status) {
           setPrivacyPolicies((prev) => [...prev, res.data]);
         }
       }
@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
       grow: 3,
       cell: (row) => (
         <div
-          className="max-h-20 overflow-hidden"
+          className="max-h-20 overflow-hidden py-4 leading-loose"
           dangerouslySetInnerHTML={{ __html: row.content }}
         />
       )
@@ -167,10 +167,10 @@ export default function PrivacyPolicyPage() {
           </select>
           <div className="mb-2 border rounded">
             <Tiptap
-                key={editPrivacyPolicy?.id ?? 'new'} // remounts editor on edit
-                content={content}
-                onUpdate={(html) => setContent(html)}
-                />
+              key={editPrivacyPolicy?.id ?? 'new'} // remounts editor on edit
+              content={content}
+              onUpdate={(html) => setContent(html)}
+            />
           </div>
           <Button
             type="submit"

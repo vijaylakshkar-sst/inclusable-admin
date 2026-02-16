@@ -154,14 +154,14 @@ export default function VehicleModelsPage() {
   ];
 
   return (
-    <div className="p-6 flex gap-6">
-      <div className="w-1/3 border p-4 rounded shadow">
+    <div className="p-4 lg:p-6 flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
           {editItem ? 'Edit Vehicle Model' : 'Add New Vehicle Model'}
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          
+
           {/* Vehicle Make */}
           <select
             name="make_id"
@@ -217,7 +217,7 @@ export default function VehicleModelsPage() {
         </form>
       </div>
 
-      <div className="w-2/3">
+      <div className="w-full lg:w-2/3">
         <DataTable
           columns={columns}
           data={vehicleModels}

@@ -8,21 +8,8 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
 const AppHeader: React.FC = () => {
-  const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleToggle = () => {
-    if (window.innerWidth >= 1024) {
-      toggleSidebar();
-    } else {
-      toggleMobileSidebar();
-    }
-  };
-
-  const toggleApplicationMenu = () => {
-    setApplicationMenuOpen(!isApplicationMenuOpen);
-  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -38,13 +25,18 @@ const AppHeader: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-200 dark:border-gray-800 dark:bg-gray-900">
-      <div className="flex flex-col lg:flex-row items-center justify-between w-full px-4 py-3 lg:px-6">
-        {/* Top Row: Logo + Mobile Actions */}
-        <div className="flex items-center justify-between w-full lg:w-auto">
-          {/* Sidebar toggle button */}
+      <div className="flex items-center justify-between w-full px-4 py-3 lg:px-6">
+        {/* Left: Sidebar Toggle */}
+        <div className="flex items-center">
           <button
-            className="lg:hidden text-gray-500 dark:text-gray-400"
-            onClick={handleToggle}
+            className="text-gray-500 dark:text-gray-400"
+            onClick={() => {
+              if (window.innerWidth >= 1024) {
+                toggleSidebar();
+              } else {
+                toggleMobileSidebar();
+              }
+            }}
             aria-label="Toggle Sidebar"
           >
             {isMobileOpen ? (
@@ -67,49 +59,12 @@ const AppHeader: React.FC = () => {
               </svg>
             )}
           </button>
-
-          {/* Logo (mobile + desktop) */}
-          <Link href="/" className="ml-3 lg:ml-6 flex items-center">
-            <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
-              src="/images/logo/inclusable-logo.svg"
-              alt="Logo"
-            />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="/images/logo/inclusable-logo.svg"
-              alt="Logo"
-            />
-          </Link>
-
-          {/* App Menu button (mobile only) */}
-          <button
-            onClick={toggleApplicationMenu}
-            className="lg:hidden ml-auto text-gray-700 dark:text-gray-400"
-          >
-            <svg width="24" height="24" fill="none">
-              <path
-                d="M6 11.995a1 1 0 112 0 1 1 0 01-2 0zM12 11.995a1 1 0 112 0 1 1 0 01-2 0zM18 11.995a1 1 0 112 0 1 1 0 01-2 0z"
-                fill="currentColor"
-              />
-            </svg>
-          </button>
         </div>
 
-        {/* Expanded menu on mobile (or always shown on lg+) */}
-        <div
-          className={`w-full items-center justify-between flex-col gap-4 mt-4 lg:mt-0 lg:flex lg:flex-row ${isApplicationMenuOpen ? "flex" : "hidden"
-            } lg:flex`}
-        >
-          {/* Right: Actions */}
-          <div className="flex items-center gap-4 justify-end ">
-            <ThemeToggleButton />
-            <UserDropdown />
-          </div>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-4">
+
+          <UserDropdown />
         </div>
       </div>
     </header>

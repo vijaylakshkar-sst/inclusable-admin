@@ -123,9 +123,9 @@ export default function VehicleMakesPage() {
   ];
 
   return (
-    <div className="p-6 flex gap-6">
+    <div className="p-4 lg:p-6 flex flex-col lg:flex-row gap-6">
       {/* Left: Form */}
-      <div className="w-1/3 border p-4 rounded shadow">
+      <div className="w-full lg:w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
           {editItem ? 'Edit Vehicle Make' : 'Add New Vehicle Make'}
         </h2>
@@ -156,7 +156,7 @@ export default function VehicleMakesPage() {
       </div>
 
       {/* Right: Table */}
-      <div className="w-2/3">
+      <div className="w-full lg:w-2/3">
         <DataTable
           columns={columns}
           data={vehicleMakes}

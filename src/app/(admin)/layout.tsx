@@ -14,7 +14,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { isExpanded, isMobileOpen } = useSidebar();
   const { user, loading } = useAuth(); // 👈 from AuthContext
   const router = useRouter();
 
@@ -27,7 +27,7 @@ export default function AdminLayout({
 
   const mainContentMargin = isMobileOpen
     ? "ml-0"
-    : isExpanded || isHovered
+    : isExpanded
       ? "lg:ml-[290px]"
       : "lg:ml-[90px]";
 

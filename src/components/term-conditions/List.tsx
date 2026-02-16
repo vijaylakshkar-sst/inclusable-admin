@@ -78,7 +78,7 @@ export default function TermsListPage() {
     try {
       if (editingTerm) {
         const res = await updateTermApi(editingTerm.id!, { title, content });
-        if (res.status) {        
+        if (res.status) {
           setTerms((prev) =>
             prev.map((t) =>
               t.id === editingTerm.id ? { ...t, title, content } : t
@@ -127,7 +127,7 @@ export default function TermsListPage() {
       grow: 3,
       cell: (row) => (
         <div
-          className="max-h-20 overflow-hidden"
+          className="max-h-20 overflow-hidden py-4 leading-loose"
           dangerouslySetInnerHTML={{ __html: row.content }}
         />
       )
@@ -174,10 +174,10 @@ export default function TermsListPage() {
           </select>
           <div className="mb-2 border rounded">
             <Tiptap
-                key={editingTerm?.id ?? 'new'} // remounts editor on edit
-                content={content}
-                onUpdate={(html) => setContent(html)}
-                />
+              key={editingTerm?.id ?? 'new'} // remounts editor on edit
+              content={content}
+              onUpdate={(html) => setContent(html)}
+            />
           </div>
           <Button
             type="submit"

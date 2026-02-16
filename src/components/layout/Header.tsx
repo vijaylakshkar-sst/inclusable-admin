@@ -6,9 +6,9 @@ export default function Header() {
   return (
     <header className="bg-white shadow sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-       <Link href="/" className="text-xl font-bold text-brand-600">  
+        <Link href="/" className="text-xl font-bold text-brand-600">
           <img
-            src="/images/logo/inclusable-logo.svg"
+            src="/images/logo/logo-main.svg"
             alt="Logo"
             className="inline-block dark:hidden"
             width={154}

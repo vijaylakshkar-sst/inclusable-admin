@@ -69,7 +69,7 @@ export default function CancellationRules() {
       };
 
       if (editItem) {
-        await updateCancellationRuleApi(editItem.id!, payload);        
+        await updateCancellationRuleApi(editItem.id!, payload);
       } else {
         await createCancellationRuleApi(payload);
       }
@@ -153,11 +153,10 @@ export default function CancellationRules() {
         row.active ? 'Active' : 'Inactive',
       cell: (row: CancellationRule) => (
         <span
-          className={`px-2 py-1 rounded text-xs ${
-            row.active
+          className={`px-2 py-1 rounded text-xs ${row.active
               ? 'bg-green-100 text-green-700'
               : 'bg-gray-200 text-gray-700'
-          }`}
+            }`}
         >
           {row.active ? 'Active' : 'Inactive'}
         </span>
@@ -188,9 +187,9 @@ export default function CancellationRules() {
   // UI
   // ========================
   return (
-    <div className="p-6 flex gap-6">
+    <div className="p-4 lg:p-6 flex flex-col lg:flex-row gap-6">
       {/* FORM */}
-      <div className="w-1/3 border p-4 rounded shadow">
+      <div className="w-full lg:w-1/3 border p-4 rounded shadow">
         <h2 className="text-xl font-bold mb-4">
           {editItem
             ? 'Edit Cancellation Rule'
@@ -250,7 +249,7 @@ export default function CancellationRules() {
       </div>
 
       {/* TABLE */}
-      <div className="w-2/3">
+      <div className="w-full lg:w-2/3">
         <DataTable
           columns={columns}
           data={rules}
