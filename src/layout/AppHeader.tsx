@@ -6,7 +6,6 @@ import { useSidebar } from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
-import NavMenu from "./NavMenu";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -103,16 +102,9 @@ const AppHeader: React.FC = () => {
 
         {/* Expanded menu on mobile (or always shown on lg+) */}
         <div
-          className={`w-full items-center justify-between flex-col gap-4 mt-4 lg:mt-0 lg:flex lg:flex-row ${
-            isApplicationMenuOpen ? "flex" : "hidden"
-          } lg:flex`}
+          className={`w-full items-center justify-between flex-col gap-4 mt-4 lg:mt-0 lg:flex lg:flex-row ${isApplicationMenuOpen ? "flex" : "hidden"
+            } lg:flex`}
         >
-          {/* hidden lg:flex items-center gap-6 */}
-          {/* Center: Nav Menu */}
-          <div className="hidden lg:flex items-center gap-6 ml-6">
-            <NavMenu />
-          </div>
-
           {/* Right: Actions */}
           <div className="flex items-center gap-4 justify-end ">
             <ThemeToggleButton />
