@@ -25,16 +25,16 @@ export default function UserDropdown() {
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <Image
+          {/* <Image
             width={44}
             height={44}
             src="/images/user/owner.jpg"
             alt="User"
-          />
+          /> */}
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">
-          {user?.email?.split("@")[0] || "Guest"}
+          {user?.full_name || "Guest"}
         </span>
 
         <svg
@@ -64,7 +64,7 @@ export default function UserDropdown() {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            {user?.email?.split("@")[0] || "User"}
+            {user?.full_name || "User"}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
             {user?.email || "Not logged in"}

@@ -15,6 +15,6 @@ export const getCardCounts = async (): Promise<ApiResponse<DashboardCardsCount>>
   return await requestApi({
     url: '/admin/dashboard/counts',
     method: 'GET',
-    successMessage: '', // Optional: leave empty if you don't want toast
+    // successMessage: '', // Optional: leave empty if you don't want toast
   });
 };

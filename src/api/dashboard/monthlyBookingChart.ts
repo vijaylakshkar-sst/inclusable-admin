@@ -11,6 +11,6 @@ export const getMonthlyBookingChartData = async (): Promise<{ status: boolean; d
   return await requestApi({
     url: '/admin/dashboard/monthly-revenue',
     method: 'GET',
-    successMessage: 'Monthly booking revenue fetched successfully!',
+    // successMessage: 'Monthly booking revenue fetched successfully!',
   });
 };

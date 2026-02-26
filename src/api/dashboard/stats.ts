@@ -20,6 +20,6 @@ export const getStats = async (): Promise<ApiResponse<DashboardStats>> => {
   return await requestApi({
     url: '/admin/dashboard/stats',
     method: 'GET',
-    successMessage: '', // Optional: leave empty if you don't want toast
+    // successMessage: '', // Optional: leave empty if you don't want toast
   });
 };

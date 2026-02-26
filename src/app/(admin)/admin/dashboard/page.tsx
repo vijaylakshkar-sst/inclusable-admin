@@ -34,7 +34,7 @@ export default function Ecommerce() {
         <DemographicCard />
       </div> */}
 
-      <div className="col-span-12 xl:col-span-7">
+      <div className="col-span-12">
         <RecentUsers />
       </div>
     </div>

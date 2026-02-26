@@ -12,6 +12,6 @@ export const getMonthlyRoleChartData = async (): Promise<{ status: boolean; data
   return await requestApi({
     url: '/admin/dashboard/monthly-role-counts',
     method: 'GET',
-    successMessage: 'Monthly chart data fetched!',
+    // successMessage: 'Monthly chart data fetched!',
   });
 };
